@@ -13,13 +13,30 @@ class AddExpensesViewModel @Inject constructor(
     private val addRepository: AddRepository,
 ) : ViewModel() {
 
-    fun add(text: String) {
+    fun add(money: String, title: String, category: String, description: String, time: Long) {
         runAsync.runAsync(
             scope = viewModelScope,
             background = {
-                addRepository.add(text)
+                addRepository.add(ExpenseRecord(money, title, category, description, time))
             }
         ) {
         }
     }
+
+    fun canSave(
+        money: String,
+        title: String,
+        category: String,
+    ): Boolean {
+        return money.isNotEmpty() && title.isNotEmpty() && category.isNotEmpty()
+    }
 }
+
+data class ExpenseRecord(
+    val money: String,
+    val title: String,
+    val category: String,
+    val description: String,
+    val time: Long,
+    val id: Long = System.currentTimeMillis(),
+)

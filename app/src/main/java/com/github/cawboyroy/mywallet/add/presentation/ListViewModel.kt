@@ -1,10 +1,9 @@
 package com.github.cawboyroy.mywallet.add.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.github.cawboyroy.mywallet.add.data.ListRepository
 import com.github.cawboyroy.mywallet.core.RunAsync
-
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,8 +15,9 @@ class ListViewModel @Inject constructor(
     repository: ListRepository,
 ) : ViewModel() {
 
-    private val mutableState = MutableStateFlow<List<String>>(emptyList())
-    val state: StateFlow<List<String>>
+    private val mutableState =
+        MutableStateFlow<List<ExpenseRecord>>(emptyList())
+    val state: StateFlow<List<ExpenseRecord>>
         get() = mutableState
 
     init {

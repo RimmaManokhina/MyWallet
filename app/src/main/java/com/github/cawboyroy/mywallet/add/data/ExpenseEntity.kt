@@ -9,6 +9,14 @@ data class ExpenseEntity(
     @PrimaryKey
     @ColumnInfo("id")
     val id: Long,
+    @ColumnInfo("money")
+    val money: String,
     @ColumnInfo("title")
     val title: String,
+    @ColumnInfo("category")
+    val category: String,
+    @ColumnInfo("description")
+    val description: String,
+    @ColumnInfo("time")
+    val time: Long
 )

@@ -2,4 +2,9 @@
     <string name="app_name">MyWallet</string>
     <string name="save">Save</string>
     <string name="add">add</string>
+    <string name="choose_time">Choose date and time</string>
+    <string name="money">Money</string>
+    <string name="title">Title</string>
+    <string name="category">Category</string>
+    <string name="description">Description</string>
 </resources>
