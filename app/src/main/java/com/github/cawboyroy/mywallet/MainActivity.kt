@@ -14,7 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import com.github.cawboyroy.mywallet.add.presentation.ListContent
+import com.github.cawboyroy.mywallet.main.presentation.ListContent
 import com.github.cawboyroy.mywallet.ui.theme.MyWalletTheme
 import dagger.hilt.android.AndroidEntryPoint
 
