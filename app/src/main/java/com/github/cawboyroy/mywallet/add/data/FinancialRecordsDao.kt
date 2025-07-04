@@ -12,6 +12,10 @@ interface FinancialRecordsDao {
     @Upsert
     suspend fun add(financialRecordEntity: FinancialRecordEntity)
 
-    @Query("SELECT * FROM financial_records WHERE isExpenses=:isExpenses")
-    fun financialRecords(isExpenses: Boolean): Flow<List<FinancialRecordEntity>>
+    @Query("SELECT * FROM financial_records WHERE isExpenses=:isExpenses AND time < :max AND time >= :min")
+    fun financialRecords(
+        isExpenses: Boolean,
+        min: Long,
+        max: Long
+    ): Flow<List<FinancialRecordEntity>>
 }
