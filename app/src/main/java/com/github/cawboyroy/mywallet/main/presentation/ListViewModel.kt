@@ -3,8 +3,8 @@ package com.github.cawboyroy.mywallet.main.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.cawboyroy.mywallet.main.data.ListRepository
 import com.github.cawboyroy.mywallet.core.RunAsync
+import com.github.cawboyroy.mywallet.main.data.ListRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,11 +35,11 @@ class ListViewModel @Inject constructor(
             scope = viewModelScope,
             flow = isExpensesState
                 .combine(timeState) { a, b -> Pair(a, b) }
-                .flatMapLatest {
-                    repository.list(it.first, it.second)
+                .flatMapLatest { (isExpenses, time) ->
+                    repository.list(isExpenses, time)
                 }
         ) {
-            mutableState.value = timeState.value.separatedList(it)
+            mutableState.value = timeState.value.separatedList(it) //todo move to flow part later
         }
     }
 

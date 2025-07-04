@@ -1,5 +1,6 @@
 package com.github.cawboyroy.mywallet.main.presentation
 
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -15,17 +16,20 @@ interface FinancialRecordUi {
 
     fun id(): String
 
-    data class Day(private val date: String) : FinancialRecordUi {
+    data class Day(private val date: String, private val sum: String) : FinancialRecordUi {
 
         @Composable
         override fun Show() {
-            Text(
-                text = date, modifier = Modifier
+            Row(
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp, horizontal = 8.dp)
-            )
+            ) {
+                Text(text = date, modifier = Modifier.weight(1f))
+                Text(text = sum)
+            }
         }
-        override fun id() = date
+        override fun id() = date + sum
     }
 
     data class Base(
