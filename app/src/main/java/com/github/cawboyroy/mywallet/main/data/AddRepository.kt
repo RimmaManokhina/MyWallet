@@ -1,6 +1,6 @@
-package com.github.cawboyroy.mywallet.add.data
+package com.github.cawboyroy.mywallet.main.data
 
-import com.github.cawboyroy.mywallet.add.presentation.FinancialRecord
+import com.github.cawboyroy.mywallet.main.presentation.FinancialRecord
 import javax.inject.Inject
 
 interface AddRepository {

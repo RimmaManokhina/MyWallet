@@ -1,4 +1,4 @@
-package com.github.cawboyroy.mywallet.add.presentation
+package com.github.cawboyroy.mywallet.main.presentation
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.border

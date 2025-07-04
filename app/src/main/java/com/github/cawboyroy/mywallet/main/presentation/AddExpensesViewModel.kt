@@ -1,8 +1,8 @@
-package com.github.cawboyroy.mywallet.add.presentation
+package com.github.cawboyroy.mywallet.main.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.cawboyroy.mywallet.add.data.AddRepository
+import com.github.cawboyroy.mywallet.main.data.AddRepository
 import com.github.cawboyroy.mywallet.core.RunAsync
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
