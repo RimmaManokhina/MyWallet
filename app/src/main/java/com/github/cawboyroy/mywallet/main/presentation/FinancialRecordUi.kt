@@ -71,7 +71,7 @@ fun FinancialRecordUi(
             )
 
             Text(
-                text = record.money,//todo format later
+                text = record.money.toString(),//todo format later
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 color = Color(0xFF008000),
@@ -87,7 +87,7 @@ fun FinancialRecordUi(
 fun PreviewExpenseUi() {
     FinancialRecordUi(
         FinancialRecord(
-            "18990",
+            "18990".toDouble(),
             "pizza",
             "food",
             "2 dominos",

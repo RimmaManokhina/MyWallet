@@ -2,8 +2,8 @@ package com.github.cawboyroy.mywallet.main.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.cawboyroy.mywallet.main.data.AddRepository
 import com.github.cawboyroy.mywallet.core.RunAsync
+import com.github.cawboyroy.mywallet.main.data.AddRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -26,7 +26,7 @@ class AddFinancialRecordViewModel @Inject constructor(
             background = {
                 addRepository.add(
                     FinancialRecord(
-                        money,
+                        money.toDouble(),
                         title,
                         category,
                         description,
@@ -41,7 +41,7 @@ class AddFinancialRecordViewModel @Inject constructor(
 }
 
 data class FinancialRecord(
-    val money: String,
+    val money: Double,
     val title: String,
     val category: String,
     val description: String,
