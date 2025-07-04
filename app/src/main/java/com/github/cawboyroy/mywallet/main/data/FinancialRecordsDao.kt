@@ -12,7 +12,8 @@ interface FinancialRecordsDao {
     @Upsert
     suspend fun add(financialRecordEntity: FinancialRecordEntity)
 
-    @Query("SELECT * FROM financial_records WHERE isExpenses=:isExpenses AND time < :max AND time >= :min")
+    @Query("SELECT * FROM financial_records WHERE isExpenses=:isExpenses AND time < :max AND time >= :min ORDER BY time DESC")
+
     fun financialRecords(
         isExpenses: Boolean,
         min: Long,

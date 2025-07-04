@@ -1,98 +1,51 @@
 package com.github.cawboyroy.mywallet.main.presentation
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-@Composable
-fun FinancialRecordUi(
-    record: FinancialRecord,
-    modifier: Modifier = Modifier,
-) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp, horizontal = 8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 8.dp),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = record.title,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 2,
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = record.category,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
-                    maxLines = 1
-                )
-            }
 
-            Spacer(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(1.dp)
-            )
+interface FinancialRecordUi {
 
+    @Composable
+    fun Show()
+
+    fun id(): String
+
+    data class Day(private val date: String) : FinancialRecordUi {
+
+        @Composable
+        override fun Show() {
             Text(
-                text = record.money.toString(),//todo format later
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.SemiBold,
-                color = Color(0xFF008000),
-                textAlign = TextAlign.End,
-                modifier = Modifier.align(Alignment.CenterVertically)
+                text = date, modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp, horizontal = 8.dp)
             )
         }
+        override fun id() = date
     }
-}
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewExpenseUi() {
-    FinancialRecordUi(
-        FinancialRecord(
-            "18990".toDouble(),
-            "pizza",
-            "food",
-            "2 dominos",
-            System.currentTimeMillis(),
-            true,
-        )
-    )
+    data class Base(
+        val money: Double,
+        private val title: String,
+        private val category: String,
+        private val description: String,
+        val time: Long,
+        private val isExpenses: Boolean,
+        private val id: Long = System.currentTimeMillis(),
+    ) : FinancialRecordUi {
+
+        @Composable
+        override fun Show() {
+            FinancialRecordInListUi(
+                money = money,
+                title = title,
+                category = category,
+            )
+        }
+        override fun id() = id.toString()
+    }
 }

@@ -13,14 +13,16 @@ data class MonthsUi(private val now: Long) : Serializable {
 
     private val timeZone: TimeZone = TimeZone.getDefault()
 
-    fun monthNameAndSum(data: List<FinancialRecord>): String {
+    fun monthNameAndSum(data: List<FinancialRecordUi>): String {
+        val list: List<Double> =
+            data.map { if (it is FinancialRecordUi.Base) it.money else 0.0 }//todo improve
         val instant = Instant.ofEpochMilli(now)
         val zonedDateTime = instant.atZone(ZoneId.systemDefault())
         val month: Month = zonedDateTime.month
         return month.getDisplayName(
             TextStyle.FULL,
             Locale.getDefault()
-        ) + ": " + data.sumOf { it.money }
+        ) + ": " + list.sum()
     }
 
     fun nextMonth(): MonthsUi {
@@ -58,5 +60,38 @@ data class MonthsUi(private val now: Long) : Serializable {
         val nextMonthStartMillis = calendar.timeInMillis
 
         return Pair(currentMonthStartMillis, nextMonthStartMillis)
+    }
+
+    fun separatedList(records: List<FinancialRecord>): List<FinancialRecordUi> {
+        if (records.isEmpty()) return emptyList()
+        val list = mutableListOf<FinancialRecordUi>()
+        var day = dayOfMonth(records.first().time)
+        list.add(FinancialRecordUi.Day(day))
+        records.forEach {
+            val new = dayOfMonth(it.time)
+            if (new != day) {
+                list.add(FinancialRecordUi.Day(new))
+                day = new
+            }
+            list.add(
+                FinancialRecordUi.Base(
+                    it.money, it.title, it.category, it.description, it.time, it.isExpenses, it.id
+                )
+            )
+        }
+        return list
+    }
+
+    private fun dayOfMonth(time: Long): String {
+        val instant = Instant.ofEpochMilli(time)
+        val zonedDateTime = instant.atZone(ZoneId.systemDefault())
+        val day = zonedDateTime.dayOfMonth
+        val month: Month = zonedDateTime.month
+        return "${
+            month.getDisplayName(
+                TextStyle.FULL,
+                Locale.getDefault()
+            )
+        } $day"
     }
 }
