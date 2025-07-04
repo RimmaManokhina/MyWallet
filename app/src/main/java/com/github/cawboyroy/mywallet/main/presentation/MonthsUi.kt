@@ -62,25 +62,29 @@ data class MonthsUi(private val now: Long) : Serializable {
         return Pair(currentMonthStartMillis, nextMonthStartMillis)
     }
 
-    fun separatedList(records: List<FinancialRecord>): List<FinancialRecordUi> {
-        if (records.isEmpty()) return emptyList()
-        val list = mutableListOf<FinancialRecordUi>()
-        var day = dayOfMonth(records.first().time)
-        list.add(FinancialRecordUi.Day(day))
-        records.forEach {
-            val new = dayOfMonth(it.time)
-            if (new != day) {
-                list.add(FinancialRecordUi.Day(new))
-                day = new
-            }
-            list.add(
+    fun separatedList(records: List<FinancialRecord>): List<FinancialRecordUi> =
+        if (records.isEmpty())
+            emptyList()
+        else
+            records.map {
                 FinancialRecordUi.Base(
-                    it.money, it.title, it.category, it.description, it.time, it.isExpenses, it.id
+                    it.money,
+                    it.title,
+                    it.category,
+                    it.description,
+                    it.time,
+                    it.isExpenses,
+                    it.id
                 )
-            )
-        }
-        return list
-    }
+            }
+                .groupBy { dayOfMonth(it.time) }
+                .entries
+                .sortedBy { it.key }
+                .flatMap { (day, dayRecordsUi) ->
+                    val sum = dayRecordsUi.sumOf { it.money }
+                    dayRecordsUi + listOf(FinancialRecordUi.Day(day, sum.toString()))
+                }.reversed()
+    //todo make foreach
 
     private fun dayOfMonth(time: Long): String {
         val instant = Instant.ofEpochMilli(time)
