@@ -6,11 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.github.cawboyroy.mywallet.add.data.ListRepository
 import com.github.cawboyroy.mywallet.core.RunAsync
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ListViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
@@ -29,15 +32,9 @@ class ListViewModel @Inject constructor(
     init {
         runAsync.runFlow(
             scope = viewModelScope,
-            flow = isExpensesState
-        ) { isExpenses ->
-            job?.cancel()
-            job = runAsync.runFlow(
-                scope = viewModelScope,
-                flow = repository.list(isExpenses)
-            ) {
-                mutableState.value = it
-            }
+            flow = isExpensesState.flatMapLatest(transform = repository::list)
+        ) {
+            mutableState.value = it
         }
     }
 
