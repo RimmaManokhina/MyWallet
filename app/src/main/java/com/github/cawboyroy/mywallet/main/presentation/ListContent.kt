@@ -71,8 +71,8 @@ fun ListContent(paddingValues: PaddingValues) {
             modifier = Modifier.fillMaxSize(),
             state = listState,
         ) {
-            items(items = data, key = { item -> item.id }) {
-                FinancialRecordUi(it)
+            items(items = data, key = { item -> item.id() }) {
+                it.Show()
             }
         }
     }

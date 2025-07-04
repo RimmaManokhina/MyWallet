@@ -26,8 +26,8 @@ class ListViewModel @Inject constructor(
 
     val isExpensesState = savedStateHandle.getStateFlow(IS_EXPENSES, true)
 
-    private val mutableState = MutableStateFlow<List<FinancialRecord>>(emptyList())
-    val state: StateFlow<List<FinancialRecord>>
+    private val mutableState = MutableStateFlow<List<FinancialRecordUi>>(emptyList())
+    val state: StateFlow<List<FinancialRecordUi>>
         get() = mutableState
 
     init {
@@ -35,9 +35,11 @@ class ListViewModel @Inject constructor(
             scope = viewModelScope,
             flow = isExpensesState
                 .combine(timeState) { a, b -> Pair(a, b) }
-                .flatMapLatest { repository.list(it.first, it.second) }
+                .flatMapLatest {
+                    repository.list(it.first, it.second)
+                }
         ) {
-            mutableState.value = it
+            mutableState.value = timeState.value.separatedList(it)
         }
     }
 
