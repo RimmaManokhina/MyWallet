@@ -1,8 +1,8 @@
 package com.github.cawboyroy.mywallet.di
 
-import com.github.cawboyroy.mywallet.add.data.CacheModule
-import com.github.cawboyroy.mywallet.add.data.FinancialRecordsDao
-import com.github.cawboyroy.mywallet.add.data.ListRepository
+import com.github.cawboyroy.mywallet.main.data.CacheModule
+import com.github.cawboyroy.mywallet.main.data.FinancialRecordsDao
+import com.github.cawboyroy.mywallet.main.data.ListRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

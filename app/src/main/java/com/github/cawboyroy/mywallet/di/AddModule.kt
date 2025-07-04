@@ -1,6 +1,6 @@
 package com.github.cawboyroy.mywallet.di
 
-import com.github.cawboyroy.mywallet.add.data.AddRepository
+import com.github.cawboyroy.mywallet.main.data.AddRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

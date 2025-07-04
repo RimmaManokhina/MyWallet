@@ -8,4 +8,6 @@
     <string name="expenses">Expenses</string>
     <string name="incomes">Incomes</string>
     <string name="money">Money</string>
+    <string name="previous_month">previous month</string>
+    <string name="next_month">next month</string>
 </resources>
