@@ -8,18 +8,44 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class AddExpensesViewModel @Inject constructor(
+class AddFinancialRecordViewModel @Inject constructor(
     private val runAsync: RunAsync,
     private val addRepository: AddRepository,
 ) : ViewModel() {
 
-    fun add(text: String) {
+    fun add(
+        money: String,
+        title: String,
+        category: String,
+        description: String,
+        time: Long,
+        isExpenses: Boolean,
+    ) {
         runAsync.runAsync(
             scope = viewModelScope,
             background = {
-                addRepository.add(text)
+                addRepository.add(
+                    FinancialRecord(
+                        money,
+                        title,
+                        category,
+                        description,
+                        time,
+                        isExpenses
+                    )
+                )
             }
         ) {
         }
     }
 }
+
+data class FinancialRecord(
+    val money: String,
+    val title: String,
+    val category: String,
+    val description: String,
+    val time: Long,
+    val isExpenses: Boolean,
+    val id: Long = System.currentTimeMillis(),
+)

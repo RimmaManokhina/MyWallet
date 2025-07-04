@@ -8,14 +8,14 @@ import javax.inject.Inject
 
 interface CacheModule {
 
-    fun dao(): ExpensesDao
+    fun dao(): FinancialRecordsDao
 
     class Base @Inject constructor(@ApplicationContext applicationContext: Context) : CacheModule {
 
         private val database by lazy {
             Room.databaseBuilder(
                 applicationContext,
-                ExpensesDatabase::class.java,
+                FinancialRecordsDatabase::class.java,
                 applicationContext.getString(R.string.app_name)
             ).build()
         }

@@ -2,6 +2,7 @@ package com.github.cawboyroy.mywallet.core
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
@@ -18,7 +19,7 @@ interface RunAsync {
         scope: CoroutineScope,
         flow: Flow<T>,
         onEach: suspend (T) -> Unit,
-    )
+    ): Job
 
     class Base @Inject constructor() : RunAsync {
 
@@ -39,8 +40,8 @@ interface RunAsync {
             scope: CoroutineScope,
             flow: Flow<T>,
             onEach: suspend (T) -> Unit,
-        ) {
-            flow.onEach(onEach).flowOn(Dispatchers.IO).launchIn(scope)
+        ): Job {
+            return flow.onEach(onEach).flowOn(Dispatchers.IO).launchIn(scope)
         }
     }
 }
