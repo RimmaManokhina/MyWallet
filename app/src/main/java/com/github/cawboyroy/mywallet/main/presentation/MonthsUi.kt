@@ -2,10 +2,26 @@ package com.github.cawboyroy.mywallet.main.presentation
 
 import android.icu.util.Calendar
 import android.icu.util.TimeZone
+import java.io.Serializable
+import java.time.Instant
+import java.time.Month
+import java.time.ZoneId
+import java.time.format.TextStyle
+import java.util.Locale
 
-data class MonthsUi(private val now: Long) {
+data class MonthsUi(private val now: Long) : Serializable {
 
     private val timeZone: TimeZone = TimeZone.getDefault()
+
+    fun monthNameAndSum(data: List<FinancialRecord>): String {
+        val instant = Instant.ofEpochMilli(now)
+        val zonedDateTime = instant.atZone(ZoneId.systemDefault())
+        val month: Month = zonedDateTime.month
+        return month.getDisplayName(
+            TextStyle.FULL,
+            Locale.getDefault()
+        ) + ": " + data.sumOf { it.money }
+    }
 
     fun nextMonth(): MonthsUi {
         val calendar = Calendar.getInstance(timeZone)

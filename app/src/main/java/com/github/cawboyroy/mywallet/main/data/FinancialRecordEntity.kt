@@ -10,7 +10,7 @@ data class FinancialRecordEntity(
     @ColumnInfo("id")
     val id: Long,
     @ColumnInfo("money")
-    val money: String,
+    val money: Double,
     @ColumnInfo("title")
     val title: String,
     @ColumnInfo("category")
@@ -20,5 +20,5 @@ data class FinancialRecordEntity(
     @ColumnInfo("time")
     val time: Long,
     @ColumnInfo("isExpenses")
-    val isExpenses: Boolean
+    val isExpenses: Boolean,
 )
