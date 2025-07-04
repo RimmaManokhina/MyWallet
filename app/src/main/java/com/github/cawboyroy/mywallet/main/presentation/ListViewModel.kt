@@ -1,9 +1,9 @@
-package com.github.cawboyroy.mywallet.add.presentation
+package com.github.cawboyroy.mywallet.main.presentation
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.cawboyroy.mywallet.add.data.ListRepository
+import com.github.cawboyroy.mywallet.main.data.ListRepository
 import com.github.cawboyroy.mywallet.core.RunAsync
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,7 +22,7 @@ class ListViewModel @Inject constructor(
 ) : ViewModel() {
 
     val timeState =
-        savedStateHandle.getStateFlow(TIME, System.currentTimeMillis())//todo replace object
+        savedStateHandle.getStateFlow(TIME, MonthsUi(System.currentTimeMillis()))
 
     val isExpensesState = savedStateHandle.getStateFlow(IS_EXPENSES, true)
 
@@ -43,6 +43,14 @@ class ListViewModel @Inject constructor(
 
     fun update(isExpenses: Boolean) {
         savedStateHandle[IS_EXPENSES] = isExpenses
+    }
+
+    fun showPreviousMonth() {
+        savedStateHandle[TIME] = timeState.value.previousMonth()
+    }
+
+    fun showNextMonth() {
+        savedStateHandle[TIME] = timeState.value.nextMonth()
     }
 
     companion object {

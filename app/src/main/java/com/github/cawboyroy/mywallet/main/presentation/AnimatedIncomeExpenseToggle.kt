@@ -1,4 +1,4 @@
-package com.github.cawboyroy.mywallet.add.presentation
+package com.github.cawboyroy.mywallet.main.presentation
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween

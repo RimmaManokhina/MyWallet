@@ -1,4 +1,4 @@
-package com.github.cawboyroy.mywallet.add.data
+package com.github.cawboyroy.mywallet.main.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
