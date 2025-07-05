@@ -10,4 +10,6 @@
     <string name="money">Money</string>
     <string name="previous_month">previous month</string>
     <string name="next_month">next month</string>
+    <string name="expand">expand</string>
+    <string name="collapse">collapse</string>
 </resources>
