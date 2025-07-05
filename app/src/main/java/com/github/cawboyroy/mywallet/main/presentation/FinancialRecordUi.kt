@@ -9,7 +9,7 @@ import com.github.cawboyroy.mywallet.R
 interface FinancialRecordUi {
 
     @Composable
-    fun Show(actions: RecordActions)
+    fun Show(actions: RecordActions, onClick: (Long) -> Unit)
 
     fun id(): String
 
@@ -22,7 +22,7 @@ interface FinancialRecordUi {
     ) : FinancialRecordUi {
 
         @Composable
-        override fun Show(actions: RecordActions) = DayUi(
+        override fun Show(actions: RecordActions, onClick: (Long) -> Unit) = DayUi(
             R.string.expand,
             Icons.Filled.KeyboardArrowUp,
             date,
@@ -43,7 +43,7 @@ interface FinancialRecordUi {
     ) : FinancialRecordUi {
 
         @Composable
-        override fun Show(actions: RecordActions) = DayUi(
+        override fun Show(actions: RecordActions, onClick: (Long) -> Unit) = DayUi(
             R.string.collapse,
             Icons.Filled.KeyboardArrowDown,
             date,
@@ -68,7 +68,7 @@ interface FinancialRecordUi {
     ) : FinancialRecordUi {
 
         @Composable
-        override fun Show(actions: RecordActions) {
+        override fun Show(actions: RecordActions, onClick: (Long) -> Unit) {
             FinancialRecordInListUi(
                 money = money,
                 title = title,

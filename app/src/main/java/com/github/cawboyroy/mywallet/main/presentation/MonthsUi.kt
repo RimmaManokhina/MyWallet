@@ -100,9 +100,6 @@ data class MonthsUi(private val now: Long) : Serializable {
                     record.money,
                     record.title,
                     record.category,
-                    record.description,
-                    record.time,
-                    record.isExpenses,
                     record.id
                 )
             )

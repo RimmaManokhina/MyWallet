@@ -31,7 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.cawboyroy.mywallet.R
 
 @Composable
-fun ListContent(paddingValues: PaddingValues) {
+fun ListContent(paddingValues: PaddingValues, onRecordClick: (Long) -> Unit) {
     val viewModel: ListViewModel = hiltViewModel()
     val records = viewModel.recordsFlow.collectAsStateWithLifecycle(emptyList()).value
     val state = viewModel.screenStateFlow.collectAsStateWithLifecycle().value
@@ -73,7 +73,7 @@ fun ListContent(paddingValues: PaddingValues) {
             state = listState,
         ) {
             items(items = records, key = { item -> item.id() }) {
-                it.Show(viewModel)
+                it.Show(viewModel, onRecordClick)
             }
             item {
                 Spacer(modifier = Modifier.height(72.dp))

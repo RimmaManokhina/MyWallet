@@ -12,4 +12,5 @@
     <string name="next_month">next month</string>
     <string name="expand">expand</string>
     <string name="collapse">collapse</string>
+    <string name="delete">delete</string>
 </resources>
