@@ -1,0 +1,25 @@
+package com.github.cawboyroy.mywallet.main.presentation
+
+import java.io.Serializable
+
+data class ScreenState(
+    val isExpenses: Boolean,
+    val time: MonthsUi,
+    val collapsedIds: CollapsedIds,
+) : Serializable {
+
+    fun separatedList(records: List<FinancialRecord>) =
+        time.separatedList(collapsedIds.value(), records)
+
+    fun switch(isExpenses: Boolean) = copy(isExpenses = isExpenses)
+
+    fun showPreviousMonth() = copy(collapsedIds = collapsedIds.clear(), time = time.previousMonth())
+
+    fun showNextMonth() = copy(collapsedIds = collapsedIds.clear(), time = time.nextMonth())
+
+    fun collapse(id: Int) = copy(collapsedIds = collapsedIds.add(id))
+
+    fun expand(id: Int) = copy(collapsedIds = collapsedIds.remove(id))
+
+    fun monthNameAndSum(data: List<FinancialRecordUi>) = time.monthNameAndSum(data)
+}

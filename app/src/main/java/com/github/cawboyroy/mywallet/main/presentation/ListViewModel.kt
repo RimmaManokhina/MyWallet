@@ -9,11 +9,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import java.io.Serializable
-import javax.inject.Inject
 import kotlinx.coroutines.flow.map
+
+import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
@@ -53,12 +52,10 @@ class ListViewModel @Inject constructor(
 
     fun showPreviousMonth() {
         savedStateHandle[SCREEN_STATE] = screenStateFlow.value.showPreviousMonth()
-
     }
 
     fun showNextMonth() {
         savedStateHandle[SCREEN_STATE] = screenStateFlow.value.showNextMonth()
-
     }
 
     override fun collapse(id: Int) {
@@ -71,44 +68,5 @@ class ListViewModel @Inject constructor(
 
     companion object {
         private const val SCREEN_STATE = "SCREEN_STATE"
-
-        data class CollapsedIds(private val set: Set<Int>) : Serializable {
-
-            fun clear(): CollapsedIds {
-                return CollapsedIds(emptySet())
-            }
-
-            fun add(day: Int): CollapsedIds {
-                return CollapsedIds(set.toMutableSet().also { it.add(day) }.toSet())
-            }
-
-            fun remove(day: Int): CollapsedIds {
-                return CollapsedIds(set.toMutableSet().also { it.remove(day) }.toSet())
-            }
-
-            fun value(): Set<Int> = set
-        }
-
-        data class ScreenState(
-            val isExpenses: Boolean,
-            val time: MonthsUi,
-            val collapsedIds: CollapsedIds
-        ) : Serializable {
-
-            fun separatedList(records: List<FinancialRecord>) =
-                time.separatedList(collapsedIds.value(), records)
-
-            fun switch(isExpenses: Boolean) = copy(isExpenses = isExpenses)
-
-            fun showPreviousMonth() = copy(collapsedIds = collapsedIds.clear(), time = time.previousMonth())
-
-            fun showNextMonth() = copy(collapsedIds = collapsedIds.clear(), time = time.nextMonth())
-
-            fun collapse(id: Int) = copy(collapsedIds = collapsedIds.add(id))
-
-            fun expand(id: Int) = copy(collapsedIds = collapsedIds.remove(id))
-
-            fun monthNameAndSum(data: List<FinancialRecordUi>) = time.monthNameAndSum(data)
-        }
     }
 }
