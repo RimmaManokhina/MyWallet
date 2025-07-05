@@ -22,75 +22,91 @@ class ListViewModel @Inject constructor(
     repository: ListRepository,
 ) : ViewModel(), RecordActions {
 
-    val collapsedIds = savedStateHandle.getStateFlow(COLLAPSED, CollapsedIds(mutableSetOf()))
+    val screenStateFlow = savedStateHandle.getStateFlow(
+        SCREEN_STATE, ScreenState(
+            isExpenses = true,
+            time = MonthsUi(System.currentTimeMillis()),
+            collapsedIds = CollapsedIds(emptySet())
+        )
+    )
 
-    val timeState =
-        savedStateHandle.getStateFlow(TIME, MonthsUi(System.currentTimeMillis()))
-
-    val isExpensesState = savedStateHandle.getStateFlow(IS_EXPENSES, true)
-
-    private val mutableState = MutableStateFlow<List<FinancialRecordUi>>(emptyList())
-    val state: StateFlow<List<FinancialRecordUi>>
-        get() = mutableState
+    private val recordsMutableStateFlow = MutableStateFlow<List<FinancialRecordUi>>(emptyList())
+    val recordsFlow: StateFlow<List<FinancialRecordUi>>
+        get() = recordsMutableStateFlow
 
     init {
         runAsync.runFlow(
             scope = viewModelScope,
-            flow = isExpensesState
-                .combine(timeState) { isExpense, time -> Pair(isExpense, time) }
-                .flatMapLatest { (isExpenses, time) ->
-                    repository.list(isExpenses, time)
-                }.combine(collapsedIds) { a, b -> Pair(a, b) }
-        ) { (list, collapsed) ->
-            mutableState.value = timeState.value.separatedList(
-                collapsed.value(),
-                list
-            ) //todo move to flow part later}
+            flow = screenStateFlow.flatMapLatest { screenState ->
+                repository.list(screenState.isExpenses, screenState.time)
+            }.combine(screenStateFlow) { list, state -> Pair(list, state) }
+        ) { (list, state) ->
+            recordsMutableStateFlow.value = state.separatedList(list)
         }
     }
 
-    fun update(isExpenses: Boolean) {
-        savedStateHandle[IS_EXPENSES] = isExpenses
+    fun switch(isExpenses: Boolean) {
+        savedStateHandle[SCREEN_STATE] = screenStateFlow.value.switch(isExpenses)
     }
 
     fun showPreviousMonth() {
-        savedStateHandle[COLLAPSED] = collapsedIds.value.clear()
-        savedStateHandle[TIME] = timeState.value.previousMonth()
+        savedStateHandle[SCREEN_STATE] = screenStateFlow.value.showPreviousMonth()
+
     }
 
     fun showNextMonth() {
-        savedStateHandle[COLLAPSED] = collapsedIds.value.clear()
-        savedStateHandle[TIME] = timeState.value.nextMonth()
+        savedStateHandle[SCREEN_STATE] = screenStateFlow.value.showNextMonth()
+
     }
 
     override fun collapse(id: Int) {
-        savedStateHandle[COLLAPSED] = collapsedIds.value.add(id)
+        savedStateHandle[SCREEN_STATE] = screenStateFlow.value.collapse(id)
     }
 
     override fun expand(id: Int) {
-        savedStateHandle[COLLAPSED] = collapsedIds.value.remove(id)
+        savedStateHandle[SCREEN_STATE] = screenStateFlow.value.expand(id)
     }
 
     companion object {
-        private const val IS_EXPENSES = "isExpensesFlow"
-        private const val TIME = "time"
-        private const val COLLAPSED = "collapsed"
+        private const val SCREEN_STATE = "SCREEN_STATE"
+
+        data class CollapsedIds(private val set: Set<Int>) : Serializable {
+
+            fun clear(): CollapsedIds {
+                return CollapsedIds(emptySet())
+            }
+
+            fun add(day: Int): CollapsedIds {
+                return CollapsedIds(set.toMutableSet().also { it.add(day) }.toSet())
+            }
+
+            fun remove(day: Int): CollapsedIds {
+                return CollapsedIds(set.toMutableSet().also { it.remove(day) }.toSet())
+            }
+
+            fun value(): Set<Int> = set
+        }
+
+        data class ScreenState(
+            val isExpenses: Boolean,
+            val time: MonthsUi,
+            val collapsedIds: CollapsedIds
+        ) : Serializable {
+
+            fun separatedList(records: List<FinancialRecord>) =
+                time.separatedList(collapsedIds.value(), records)
+
+            fun switch(isExpenses: Boolean) = copy(isExpenses = isExpenses)
+
+            fun showPreviousMonth() = copy(collapsedIds = collapsedIds.clear(), time = time.previousMonth())
+
+            fun showNextMonth() = copy(collapsedIds = collapsedIds.clear(), time = time.nextMonth())
+
+            fun collapse(id: Int) = copy(collapsedIds = collapsedIds.add(id))
+
+            fun expand(id: Int) = copy(collapsedIds = collapsedIds.remove(id))
+
+            fun monthNameAndSum(data: List<FinancialRecordUi>) = time.monthNameAndSum(data)
+        }
     }
-}
-
-data class CollapsedIds(private val set: Set<Int>) : Serializable {
-
-    fun clear(): CollapsedIds {
-        return CollapsedIds(emptySet())
-    }
-
-    fun add(day: Int): CollapsedIds {
-        return CollapsedIds(set.toMutableSet().also { it.add(day) }.toSet())
-    }
-
-    fun remove(day: Int): CollapsedIds {
-        return CollapsedIds(set.toMutableSet().also { it.remove(day) }.toSet())
-    }
-
-    fun value(): Set<Int> = set
 }

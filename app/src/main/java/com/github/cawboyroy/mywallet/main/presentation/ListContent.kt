@@ -33,9 +33,8 @@ import com.github.cawboyroy.mywallet.R
 @Composable
 fun ListContent(paddingValues: PaddingValues) {
     val viewModel: ListViewModel = hiltViewModel()
-    val data = viewModel.state.collectAsStateWithLifecycle(emptyList()).value
-    val isExpenses = viewModel.isExpensesState.collectAsStateWithLifecycle().value
-    val time = viewModel.timeState.collectAsStateWithLifecycle().value
+    val records = viewModel.recordsFlow.collectAsStateWithLifecycle(emptyList()).value
+    val state = viewModel.screenStateFlow.collectAsStateWithLifecycle().value
 
     Column(modifier = Modifier.padding(paddingValues)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -48,9 +47,9 @@ fun ListContent(paddingValues: PaddingValues) {
 
             AnimatedIncomeExpenseToggle(
                 Modifier.weight(1f),
-                if (isExpenses) 0 else 1
+                if (state.isExpenses) 0 else 1
             ) {
-                viewModel.update(it == 0)
+                viewModel.switch(it == 0)
             }
 
             Button(onClick = viewModel::showNextMonth, modifier = Modifier.padding(4.dp)) {
@@ -64,7 +63,7 @@ fun ListContent(paddingValues: PaddingValues) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(all = 4.dp),
-            text = time.monthNameAndSum(data),
+            text = state.monthNameAndSum(records),
             style = TextStyle(fontSize = 18.sp, color = Color.Black, textAlign = TextAlign.Center)
         )
 
@@ -73,11 +72,11 @@ fun ListContent(paddingValues: PaddingValues) {
             modifier = Modifier.fillMaxSize(),
             state = listState,
         ) {
-            items(items = data, key = { item -> item.id() }) {
+            items(items = records, key = { item -> item.id() }) {
                 it.Show(viewModel)
             }
             item {
-                Spacer(modifier = Modifier.height(48.dp))
+                Spacer(modifier = Modifier.height(72.dp))
             }
         }
     }
