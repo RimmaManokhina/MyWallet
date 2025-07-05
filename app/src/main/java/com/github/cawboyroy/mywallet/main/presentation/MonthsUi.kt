@@ -14,8 +14,8 @@ data class MonthsUi(private val now: Long) : Serializable {
     private val timeZone: TimeZone = TimeZone.getDefault()
 
     fun monthNameAndSum(data: List<FinancialRecordUi>): String {
-        val list: List<Double> =
-            data.map { if (it is FinancialRecordUi.Base) it.money else 0.0 }//todo improve
+        val list: List<Double> = data.map { it.sum() }
+
         val instant = Instant.ofEpochMilli(now)
         val zonedDateTime = instant.atZone(ZoneId.systemDefault())
         val month: Month = zonedDateTime.month
@@ -62,40 +62,51 @@ data class MonthsUi(private val now: Long) : Serializable {
         return Pair(currentMonthStartMillis, nextMonthStartMillis)
     }
 
-    fun separatedList(records: List<FinancialRecord>): List<FinancialRecordUi> =
-        if (records.isEmpty())
-            emptyList()
-        else
-            records.map {
-                FinancialRecordUi.Base(
-                    it.money,
-                    it.title,
-                    it.category,
-                    it.description,
-                    it.time,
-                    it.isExpenses,
-                    it.id
+    fun separatedList(
+        collapsedDays: Set<Int>,
+        records: List<FinancialRecord>,
+    ): List<FinancialRecordUi> = if (records.isEmpty())
+        emptyList()
+    else
+        records.map {
+            FinancialRecordUi.Base(
+                it.money,
+                it.title,
+                it.category,
+                it.description,
+                it.time,
+                it.isExpenses,
+                it.id
+            )
+        }
+            .groupBy { dayOfMonth(it.time) }
+            .entries
+            .sortedBy { it.key.second }
+            .flatMap { (day, dayRecordsUi) ->
+                val sum = dayRecordsUi.sumOf { it.money }
+                val collapsed: Boolean = collapsedDays.contains(day.second)
+                val list: List<FinancialRecordUi> = listOf(
+                    if (collapsed)
+                        FinancialRecordUi.DayCollapsed(day.first, day.second, sum)
+                    else
+                        FinancialRecordUi.DayExpanded(day.first, day.second, sum)
                 )
-            }
-                .groupBy { dayOfMonth(it.time) }
-                .entries
-                .sortedBy { it.key }
-                .flatMap { (day, dayRecordsUi) ->
-                    val sum = dayRecordsUi.sumOf { it.money }
-                    dayRecordsUi + listOf(FinancialRecordUi.Day(day, sum.toString()))
-                }.reversed()
+                if (collapsed) list else dayRecordsUi + list
+            }.reversed()
     //todo make foreach
 
-    private fun dayOfMonth(time: Long): String {
+    private fun dayOfMonth(time: Long): Pair<String, Int> {
         val instant = Instant.ofEpochMilli(time)
         val zonedDateTime = instant.atZone(ZoneId.systemDefault())
         val day = zonedDateTime.dayOfMonth
         val month: Month = zonedDateTime.month
-        return "${
-            month.getDisplayName(
-                TextStyle.FULL,
-                Locale.getDefault()
-            )
-        } $day"
+        return Pair(
+            "${
+                month.getDisplayName(
+                    TextStyle.FULL,
+                    Locale.getDefault()
+                )
+            } $day", day
+        )
     }
 }

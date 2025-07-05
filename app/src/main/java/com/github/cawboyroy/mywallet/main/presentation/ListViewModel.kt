@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import java.io.Serializable
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -19,7 +20,9 @@ class ListViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     runAsync: RunAsync,
     repository: ListRepository,
-) : ViewModel() {
+) : ViewModel(), RecordActions {
+
+    val collapsedIds = savedStateHandle.getStateFlow(COLLAPSED, CollapsedIds(mutableSetOf()))
 
     val timeState =
         savedStateHandle.getStateFlow(TIME, MonthsUi(System.currentTimeMillis()))
@@ -34,12 +37,15 @@ class ListViewModel @Inject constructor(
         runAsync.runFlow(
             scope = viewModelScope,
             flow = isExpensesState
-                .combine(timeState) { a, b -> Pair(a, b) }
+                .combine(timeState) { isExpense, time -> Pair(isExpense, time) }
                 .flatMapLatest { (isExpenses, time) ->
                     repository.list(isExpenses, time)
-                }
-        ) {
-            mutableState.value = timeState.value.separatedList(it) //todo move to flow part later
+                }.combine(collapsedIds) { a, b -> Pair(a, b) }
+        ) { (list, collapsed) ->
+            mutableState.value = timeState.value.separatedList(
+                collapsed.value(),
+                list
+            ) //todo move to flow part later}
         }
     }
 
@@ -48,15 +54,43 @@ class ListViewModel @Inject constructor(
     }
 
     fun showPreviousMonth() {
+        savedStateHandle[COLLAPSED] = collapsedIds.value.clear()
         savedStateHandle[TIME] = timeState.value.previousMonth()
     }
 
     fun showNextMonth() {
+        savedStateHandle[COLLAPSED] = collapsedIds.value.clear()
         savedStateHandle[TIME] = timeState.value.nextMonth()
+    }
+
+    override fun collapse(id: Int) {
+        savedStateHandle[COLLAPSED] = collapsedIds.value.add(id)
+    }
+
+    override fun expand(id: Int) {
+        savedStateHandle[COLLAPSED] = collapsedIds.value.remove(id)
     }
 
     companion object {
         private const val IS_EXPENSES = "isExpensesFlow"
         private const val TIME = "time"
+        private const val COLLAPSED = "collapsed"
     }
+}
+
+data class CollapsedIds(private val set: Set<Int>) : Serializable {
+
+    fun clear(): CollapsedIds {
+        return CollapsedIds(emptySet())
+    }
+
+    fun add(day: Int): CollapsedIds {
+        return CollapsedIds(set.toMutableSet().also { it.add(day) }.toSet())
+    }
+
+    fun remove(day: Int): CollapsedIds {
+        return CollapsedIds(set.toMutableSet().also { it.remove(day) }.toSet())
+    }
+
+    fun value(): Set<Int> = set
 }
