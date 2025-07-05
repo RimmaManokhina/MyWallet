@@ -1,5 +1,6 @@
 package com.github.cawboyroy.mywallet.main.presentation
 
+import com.github.cawboyroy.mywallet.add.presentation.FinancialRecord
 import java.io.Serializable
 
 data class ScreenState(

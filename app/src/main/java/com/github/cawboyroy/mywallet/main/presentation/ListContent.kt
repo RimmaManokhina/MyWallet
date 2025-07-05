@@ -29,6 +29,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.cawboyroy.mywallet.R
+import com.github.cawboyroy.mywallet.add.presentation.AnimatedIncomeExpenseToggle
+import androidx.compose.material3.LocalContentColor
 
 @Composable
 fun ListContent(paddingValues: PaddingValues, onRecordClick: (Long) -> Unit) {
@@ -64,7 +66,11 @@ fun ListContent(paddingValues: PaddingValues, onRecordClick: (Long) -> Unit) {
                 .fillMaxWidth()
                 .padding(all = 4.dp),
             text = state.monthNameAndSum(records),
-            style = TextStyle(fontSize = 18.sp, color = Color.Black, textAlign = TextAlign.Center)
+            style = TextStyle(
+                fontSize = 18.sp,
+                color = LocalContentColor.current,
+                textAlign = TextAlign.Center
+            )
         )
 
         val listState = rememberLazyListState()

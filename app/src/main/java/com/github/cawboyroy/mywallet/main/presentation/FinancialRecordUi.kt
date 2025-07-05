@@ -58,21 +58,22 @@ interface FinancialRecordUi {
     }
 
     data class Base(
+        val isExpenses: Boolean,
         val money: Double,
         private val title: String,
         private val category: String,
-        private val description: String,
-        val time: Long,
-        private val isExpenses: Boolean,
-        private val id: Long = System.currentTimeMillis(),
+        private val id: Long,
     ) : FinancialRecordUi {
 
         @Composable
         override fun Show(actions: RecordActions, onClick: (Long) -> Unit) {
             FinancialRecordInListUi(
+                id = id,
+                isExpenses = isExpenses,
                 money = money,
                 title = title,
                 category = category,
+                onClick = onClick
             )
         }
 
