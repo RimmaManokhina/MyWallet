@@ -1,6 +1,6 @@
 package com.github.cawboyroy.mywallet.di
 
-import com.github.cawboyroy.mywallet.add.data.AddRepository
+import com.github.cawboyroy.mywallet.edit.data.presentation.data.EditRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -8,8 +8,8 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class AddBindsModule {
+abstract class EditModule {
 
     @Binds
-    abstract fun bindAddRepository(repository: AddRepository.Base): AddRepository
+    abstract fun binEditRepository(repository: EditRepository.Base): EditRepository
 }

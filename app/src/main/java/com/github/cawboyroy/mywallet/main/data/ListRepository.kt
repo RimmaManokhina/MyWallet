@@ -1,6 +1,6 @@
 package com.github.cawboyroy.mywallet.main.data
 
-import com.github.cawboyroy.mywallet.main.presentation.FinancialRecord
+import com.github.cawboyroy.mywallet.add.presentation.FinancialRecord
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

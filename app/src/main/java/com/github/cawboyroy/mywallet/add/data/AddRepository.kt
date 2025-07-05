@@ -1,6 +1,8 @@
-package com.github.cawboyroy.mywallet.main.data
+package com.github.cawboyroy.mywallet.add.data
 
-import com.github.cawboyroy.mywallet.main.presentation.FinancialRecord
+import com.github.cawboyroy.mywallet.add.presentation.FinancialRecord
+import com.github.cawboyroy.mywallet.main.data.FinancialRecordEntity
+import com.github.cawboyroy.mywallet.main.data.FinancialRecordsDao
 import javax.inject.Inject
 
 interface AddRepository {
@@ -17,7 +19,7 @@ interface AddRepository {
                     category = record.category,
                     description = record.description,
                     time = record.time,
-                    isExpenses = record . isExpenses
+                    isExpenses = record.isExpenses
                 )
             )
         }

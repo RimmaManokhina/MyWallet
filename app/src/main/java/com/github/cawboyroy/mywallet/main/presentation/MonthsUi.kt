@@ -2,6 +2,7 @@ package com.github.cawboyroy.mywallet.main.presentation
 
 import android.icu.util.Calendar
 import android.icu.util.TimeZone
+import com.github.cawboyroy.mywallet.add.presentation.FinancialRecord
 import java.io.Serializable
 import java.time.Instant
 import java.time.Month
@@ -15,7 +16,6 @@ data class MonthsUi(private val now: Long) : Serializable {
 
     fun monthNameAndSum(data: List<FinancialRecordUi>): String {
         val list: List<Double> = data.map { it.sum() }
-
         val instant = Instant.ofEpochMilli(now)
         val zonedDateTime = instant.atZone(ZoneId.systemDefault())
         val month: Month = zonedDateTime.month
@@ -64,7 +64,7 @@ data class MonthsUi(private val now: Long) : Serializable {
 
     fun separatedList(
         collapsedDays: Set<Int>,
-        records: List<FinancialRecord>,
+        records: List<FinancialRecord>
     ): List<FinancialRecordUi> {
         if (records.isEmpty()) return emptyList()
 
@@ -97,12 +97,10 @@ data class MonthsUi(private val now: Long) : Serializable {
             val isCurrentRecordDayCollapsed = collapsedDays.contains(recordId)
             if (!isCurrentRecordDayCollapsed) list.add(
                 FinancialRecordUi.Base(
+                    record.isExpenses,
                     record.money,
                     record.title,
                     record.category,
-                    record.description,
-                    record.time,
-                    record.isExpenses,
                     record.id
                 )
             )

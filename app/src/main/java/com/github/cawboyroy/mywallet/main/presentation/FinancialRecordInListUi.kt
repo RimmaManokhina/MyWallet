@@ -1,5 +1,6 @@
 package com.github.cawboyroy.mywallet.main.presentation
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -25,15 +26,18 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun FinancialRecordInListUi(
+    id: Long,
+    isExpenses: Boolean,
     money: Double,
     title: String,
     category: String,
-    modifier: Modifier = Modifier
+    onClick: (Long) -> Unit
 ) {
     Card(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp, horizontal = 8.dp),
+            .padding(vertical = 4.dp, horizontal = 8.dp)
+            .clickable(enabled = true, onClick = { onClick.invoke(id) }),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
@@ -76,7 +80,7 @@ fun FinancialRecordInListUi(
                 text = money.toString(),//todo format later
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
-                color = Color(0xFF008000),
+                color = Color(if (isExpenses) 0xFFFF0000 else 0xFF008000),
                 textAlign = TextAlign.End,
                 modifier = Modifier.align(Alignment.CenterVertically)
             )
@@ -88,8 +92,11 @@ fun FinancialRecordInListUi(
 @Composable
 fun PreviewExpenseUi() {
     FinancialRecordInListUi(
+        id = 123L,
+        isExpenses = true,
         money = "18990".toDouble(),
         title = "pizza",
         category = "food"
-    )
-}
+    ) {
+
+    }
