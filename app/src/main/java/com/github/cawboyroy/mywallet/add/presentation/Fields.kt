@@ -1,4 +1,4 @@
-package com.github.cawboyroy.mywallet.main.presentation
+package com.github.cawboyroy.mywallet.add.presentation
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.border
@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,7 +39,11 @@ fun MoneyField(value: String, onValueChanged: (String) -> Unit) {
     Title(R.string.money)
     BasicTextField(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        textStyle = TextStyle(fontSize = 18.sp, color = Color.Black, textAlign = TextAlign.End),
+        textStyle = TextStyle(
+            fontSize = 18.sp,
+            textAlign = TextAlign.End,
+            color = LocalContentColor.current
+        ),
         value = value,
         onValueChange = onValueChanged,
         modifier = Modifier
@@ -64,7 +69,7 @@ fun MoneyField(value: String, onValueChanged: (String) -> Unit) {
 fun TitleField(value: String, onValueChanged: (String) -> Unit) {
     Title(R.string.title)
     BasicTextField(
-        textStyle = TextStyle(fontSize = 18.sp, color = Color.Black),
+        textStyle = TextStyle(fontSize = 18.sp, color = LocalContentColor.current),
         value = value,
         onValueChange = onValueChanged,
         modifier = Modifier
@@ -90,7 +95,7 @@ fun TitleField(value: String, onValueChanged: (String) -> Unit) {
 fun CategoryField(value: String, onValueChanged: (String) -> Unit) {
     Title(R.string.category)
     BasicTextField(
-        textStyle = TextStyle(fontSize = 18.sp, color = Color.Black),
+        textStyle = TextStyle(fontSize = 18.sp, color = LocalContentColor.current),
         value = value,
         onValueChange = onValueChanged,
         modifier = Modifier
@@ -116,7 +121,7 @@ fun CategoryField(value: String, onValueChanged: (String) -> Unit) {
 fun DescriptionField(value: String, onValueChanged: (String) -> Unit) {
     Title(R.string.description)
     BasicTextField(
-        textStyle = TextStyle(fontSize = 18.sp, color = Color.Black),
+        textStyle = TextStyle(fontSize = 18.sp, color = LocalContentColor.current),
         value = value,
         onValueChange = onValueChanged,
         modifier = Modifier
