@@ -1,4 +1,4 @@
-package com.github.cawboyroy.mywallet.edit.data.presentation.data
+package com.github.cawboyroy.mywallet.edit.data
 
 import com.github.cawboyroy.mywallet.main.data.FinancialRecordEntity
 import com.github.cawboyroy.mywallet.main.data.FinancialRecordsDao

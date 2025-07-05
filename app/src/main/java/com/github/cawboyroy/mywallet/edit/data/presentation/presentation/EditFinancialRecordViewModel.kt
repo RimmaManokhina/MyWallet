@@ -1,4 +1,4 @@
-package com.github.cawboyroy.mywallet.edit.data.presentation.presentation
+package com.github.cawboyroy.mywallet.edit.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.SavedStateHandle
@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.github.cawboyroy.mywallet.core.RunAsync
-import com.github.cawboyroy.mywallet.edit.data.presentation.data.EditRepository
 import com.github.cawboyroy.mywallet.add.presentation.Close
 import com.github.cawboyroy.mywallet.add.presentation.FinancialRecord
+import com.github.cawboyroy.mywallet.main.data.EditRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -1,4 +1,4 @@
-package com.github.cawboyroy.mywallet.edit.data.presentation.presentation
+package com.github.cawboyroy.mywallet.edit.presentation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
