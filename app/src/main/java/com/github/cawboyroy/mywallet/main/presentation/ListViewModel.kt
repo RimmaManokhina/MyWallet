@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import java.io.Serializable
 import javax.inject.Inject
+import kotlinx.coroutines.flow.map
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
@@ -39,9 +40,10 @@ class ListViewModel @Inject constructor(
             scope = viewModelScope,
             flow = screenStateFlow.flatMapLatest { screenState ->
                 repository.list(screenState.isExpenses, screenState.time)
-            }.combine(screenStateFlow) { list, state -> Pair(list, state) }
-        ) { (list, state) ->
-            recordsMutableStateFlow.value = state.separatedList(list)
+                    .map { records -> Pair(screenState, records) }
+            }
+        ) { (state, records) ->
+            recordsMutableStateFlow.value = state.separatedList(records)
         }
     }
 
