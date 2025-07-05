@@ -14,6 +14,8 @@ import com.github.cawboyroy.mywallet.edit.data.presentation.presentation.EditFin
 import com.github.cawboyroy.mywallet.add.presentation.AddFinancialRecordScreen
 import com.github.cawboyroy.mywallet.ui.theme.MyWalletTheme
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.compose.runtime.mutableLongStateOf
+import com.github.cawboyroy.mywallet.main.presentation.EditFinancialRecord
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
