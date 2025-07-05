@@ -39,10 +39,10 @@ class ListViewModel @Inject constructor(
             scope = viewModelScope,
             flow = screenStateFlow.flatMapLatest { screenState ->
                 repository.list(screenState.isExpenses, screenState.time)
-                    .map { records -> Pair(screenState, records) }
+                    .map { records -> screenState.separatedList(records) }
             }
-        ) { (state, records) ->
-            recordsMutableStateFlow.value = state.separatedList(records)
+        ) {
+            recordsMutableStateFlow.value = it
         }
     }
 
