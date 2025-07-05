@@ -65,35 +65,60 @@ data class MonthsUi(private val now: Long) : Serializable {
     fun separatedList(
         collapsedDays: Set<Int>,
         records: List<FinancialRecord>,
-    ): List<FinancialRecordUi> = if (records.isEmpty())
-        emptyList()
-    else
-        records.map {
-            FinancialRecordUi.Base(
-                it.money,
-                it.title,
-                it.category,
-                it.description,
-                it.time,
-                it.isExpenses,
-                it.id
+    ): List<FinancialRecordUi> {
+        if (records.isEmpty()) return emptyList()
+
+        val list = mutableListOf<FinancialRecordUi>()
+
+        var currentDaySum = 0.0
+        var currentDayId = -1
+        var currentDayUi = ""
+        records.forEachIndexed { index, record ->
+            val (recordUi, recordId) = dayOfMonth(record.time)
+            if (currentDayId == -1) {
+                currentDayId = recordId
+                currentDayUi = recordUi
+            } else if (recordId != currentDayId) {
+                list.add(
+                    if (collapsedDays.contains(currentDayId))
+                        FinancialRecordUi.DayCollapsed(
+                            currentDayUi,
+                            currentDayId,
+                            currentDaySum
+                        )
+                    else
+                        FinancialRecordUi.DayExpanded(currentDayUi, currentDayId, currentDaySum)
+                )
+                currentDayId = recordId
+                currentDayUi = recordUi
+                currentDaySum = 0.0
+            }
+
+            val isCurrentRecordDayCollapsed = collapsedDays.contains(recordId)
+            if (!isCurrentRecordDayCollapsed) list.add(
+                FinancialRecordUi.Base(
+                    record.money,
+                    record.title,
+                    record.category,
+                    record.description,
+                    record.time,
+                    record.isExpenses,
+                    record.id
+                )
+            )
+
+            currentDaySum += record.money
+
+            if (index == records.size - 1) list.add(
+                if (collapsedDays.contains(currentDayId))
+                    FinancialRecordUi.DayCollapsed(currentDayUi, currentDayId, currentDaySum)
+                else
+                    FinancialRecordUi.DayExpanded(currentDayUi, currentDayId, currentDaySum)
             )
         }
-            .groupBy { dayOfMonth(it.time) }
-            .entries
-            .sortedBy { it.key.second }
-            .flatMap { (day, dayRecordsUi) ->
-                val sum = dayRecordsUi.sumOf { it.money }
-                val collapsed: Boolean = collapsedDays.contains(day.second)
-                val list: List<FinancialRecordUi> = listOf(
-                    if (collapsed)
-                        FinancialRecordUi.DayCollapsed(day.first, day.second, sum)
-                    else
-                        FinancialRecordUi.DayExpanded(day.first, day.second, sum)
-                )
-                if (collapsed) list else dayRecordsUi + list
-            }.reversed()
-    //todo make foreach
+
+        return list.reversed()
+    }
 
     private fun dayOfMonth(time: Long): Pair<String, Int> {
         val instant = Instant.ofEpochMilli(time)
