@@ -1,6 +1,5 @@
 package com.github.cawboyroy.mywallet.main.data
 
-
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
@@ -19,4 +18,10 @@ interface FinancialRecordsDao {
         min: Long,
         max: Long
     ): Flow<List<FinancialRecordEntity>>
+
+    @Query("DELETE FROM financial_records WHERE id = :id")
+    suspend fun delete(id: Long)
+
+    @Query("SELECT * FROM financial_records WHERE id = :id")
+    suspend fun record(id: Long): FinancialRecordEntity
 }

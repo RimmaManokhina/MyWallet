@@ -22,18 +22,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.clickable
 
 @Composable
 fun FinancialRecordInListUi(
+    id: Long,
     money: Double,
     title: String,
     category: String,
-    modifier: Modifier = Modifier
+    onClick: (Long) -> Unit
 ) {
     Card(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp, horizontal = 8.dp),
+            .padding(vertical = 4.dp, horizontal = 8.dp)
+            .clickable(enabled = true, onClick = { onClick.invoke(id) }),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
@@ -88,8 +91,11 @@ fun FinancialRecordInListUi(
 @Composable
 fun PreviewExpenseUi() {
     FinancialRecordInListUi(
+        id = 123L,
         money = "18990".toDouble(),
         title = "pizza",
         category = "food"
-    )
+    ) {
+
+    }
 }
