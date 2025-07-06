@@ -5,6 +5,8 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import com.github.cawboyroy.mywallet.R
+import com.github.cawboyroy.mywallet.add.presentation.HandleMoney
+import java.math.BigDecimal
 
 interface FinancialRecordUi {
 
@@ -13,12 +15,12 @@ interface FinancialRecordUi {
 
     fun id(): String
 
-    fun sum(): Double
+    fun sum(): BigDecimal
 
     data class DayCollapsed(
         private val date: String,
         private val day: Int,
-        private val sum: Double,
+        private val sum: BigDecimal,
     ) : FinancialRecordUi {
 
         @Composable
@@ -26,7 +28,7 @@ interface FinancialRecordUi {
             R.string.expand,
             Icons.Filled.KeyboardArrowUp,
             date,
-            sum.toString()
+            HandleMoney.formatWhole(sum.toString())
         ) {
             actions.expand(day)
         }
@@ -39,7 +41,7 @@ interface FinancialRecordUi {
     data class DayExpanded(
         private val date: String,
         private val day: Int,
-        private val sum: Double,
+        private val sum: BigDecimal,
     ) : FinancialRecordUi {
 
         @Composable
@@ -47,7 +49,7 @@ interface FinancialRecordUi {
             R.string.collapse,
             Icons.Filled.KeyboardArrowDown,
             date,
-            sum.toString()
+            HandleMoney.formatWhole(sum.toString())
         ) {
             actions.collapse(day)
         }
@@ -59,7 +61,7 @@ interface FinancialRecordUi {
 
     data class Base(
         val isExpenses: Boolean,
-        val money: Double,
+        val money: String,
         private val title: String,
         private val category: String,
         private val id: Long,
@@ -70,7 +72,7 @@ interface FinancialRecordUi {
             FinancialRecordInListUi(
                 id = id,
                 isExpenses = isExpenses,
-                money = money,
+                money = HandleMoney.formatWhole(money),
                 title = title,
                 category = category,
                 onClick = onClick
@@ -79,7 +81,7 @@ interface FinancialRecordUi {
 
         override fun id() = id.toString()
 
-        override fun sum() = 0.0
+        override fun sum(): BigDecimal = BigDecimal.ZERO
     }
 }
 

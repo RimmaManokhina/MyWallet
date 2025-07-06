@@ -19,7 +19,7 @@ import javax.inject.Inject
 class EditFinancialRecordViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val runAsync: RunAsync,
-    private val repository: EditRepository,
+    private val repository: EditRepository
 ) : ViewModel() {
 
     private val closeState: MutableStateFlow<Close> = MutableStateFlow(Close.Empty)
@@ -27,7 +27,6 @@ class EditFinancialRecordViewModel @Inject constructor(
         get() = closeState
 
     val state: StateFlow<EditState> = savedStateHandle.getStateFlow("state", EditState.Empty)
-
 
     fun loadRecord(id: Long) {
         runAsync.runAsync(
@@ -48,14 +47,14 @@ class EditFinancialRecordViewModel @Inject constructor(
         description: String,
         id: Long,
     ) = FinancialRecord(
-        money.toDouble(),
+        money,
         title,
         category,
         description,
         time,
         isExpenses,
         id
-    ) != record
+    ) != record && money.isValid()
 
     fun delete(id: Long) {
         runAsync.runAsync(scope = viewModelScope, background = {
@@ -72,12 +71,12 @@ class EditFinancialRecordViewModel @Inject constructor(
         title: String,
         category: String,
         time: Long,
-        description: String,
+        description: String
     ) {
         runAsync.runAsync(scope = viewModelScope, background = {
             repository.edit(
                 FinancialRecord(
-                    money.toDouble(),
+                    money,
                     title,
                     category,
                     description,
@@ -90,6 +89,10 @@ class EditFinancialRecordViewModel @Inject constructor(
             closeState.value = Close.Back
         }
     }
+}
+
+fun String.isValid(): Boolean {
+    return !(isEmpty() || this == "0.0" || this == "0." || this == "0")
 }
 
 interface EditState : Serializable {
@@ -108,7 +111,7 @@ interface EditState : Serializable {
         override fun Show(
             id: Long,
             viewModel: EditFinancialRecordViewModel,
-            navController: NavController,
+            navController: NavController
         ) {
             viewModel.loadRecord(id)
         }
@@ -120,7 +123,7 @@ interface EditState : Serializable {
         override fun Show(
             id: Long,
             viewModel: EditFinancialRecordViewModel,
-            navController: NavController,
+            navController: NavController
         ) {
             EditFinancialRecordInner(viewModel, record, navController)
         }

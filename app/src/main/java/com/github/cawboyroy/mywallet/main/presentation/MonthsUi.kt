@@ -3,26 +3,33 @@ package com.github.cawboyroy.mywallet.main.presentation
 import android.icu.util.Calendar
 import android.icu.util.TimeZone
 import com.github.cawboyroy.mywallet.add.presentation.FinancialRecord
+import com.github.cawboyroy.mywallet.add.presentation.HandleMoney
 import java.io.Serializable
 import java.time.Instant
 import java.time.Month
 import java.time.ZoneId
 import java.time.format.TextStyle
 import java.util.Locale
+import java.math.BigDecimal
 
 data class MonthsUi(private val now: Long) : Serializable {
 
     private val timeZone: TimeZone = TimeZone.getDefault()
 
     fun monthNameAndSum(data: List<FinancialRecordUi>): String {
-        val list: List<Double> = data.map { it.sum() }
+        val list: List<BigDecimal> = data.map { it.sum() }
         val instant = Instant.ofEpochMilli(now)
         val zonedDateTime = instant.atZone(ZoneId.systemDefault())
         val month: Month = zonedDateTime.month
+        var sum = BigDecimal.ZERO
+        list.forEach {
+            sum = sum.add(it)
+        }
+
         return month.getDisplayName(
             TextStyle.FULL,
             Locale.getDefault()
-        ) + ": " + list.sum()
+        ) + ": " + HandleMoney.formatWhole(sum.toString())
     }
 
     fun nextMonth(): MonthsUi {
@@ -70,7 +77,7 @@ data class MonthsUi(private val now: Long) : Serializable {
 
         val list = mutableListOf<FinancialRecordUi>()
 
-        var currentDaySum = 0.0
+        var currentDaySum = BigDecimal.ZERO
         var currentDayId = -1
         var currentDayUi = ""
         records.forEachIndexed { index, record ->
@@ -91,7 +98,7 @@ data class MonthsUi(private val now: Long) : Serializable {
                 )
                 currentDayId = recordId
                 currentDayUi = recordUi
-                currentDaySum = 0.0
+                currentDaySum = BigDecimal.ZERO
             }
 
             val isCurrentRecordDayCollapsed = collapsedDays.contains(recordId)
@@ -105,7 +112,7 @@ data class MonthsUi(private val now: Long) : Serializable {
                 )
             )
 
-            currentDaySum += record.money
+            currentDaySum = currentDaySum.add(BigDecimal(record.money))
 
             if (index == records.size - 1) list.add(
                 if (collapsedDays.contains(currentDayId))

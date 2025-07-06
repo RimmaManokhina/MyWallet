@@ -29,7 +29,7 @@ import androidx.compose.foundation.clickable
 fun FinancialRecordInListUi(
     id: Long,
     isExpenses: Boolean,
-    money: Double,
+    money: String,
     title: String,
     category: String,
     onClick: (Long) -> Unit
@@ -95,7 +95,7 @@ fun PreviewExpenseUi() {
     FinancialRecordInListUi(
         id = 123L,
         isExpenses = true,
-        money = "18990".toDouble(),
+        money = "18990",
         title = "pizza",
         category = "food"
     ) {

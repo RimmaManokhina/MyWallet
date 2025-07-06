@@ -10,12 +10,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.github.cawboyroy.mywallet.edit.data.presentation.presentation.EditFinancialRecordScreen
 import com.github.cawboyroy.mywallet.add.presentation.AddFinancialRecordScreen
+import com.github.cawboyroy.mywallet.edit.presentation.EditFinancialRecordScreen
+import com.github.cawboyroy.mywallet.main.presentation.HomeScreen
 import com.github.cawboyroy.mywallet.ui.theme.MyWalletTheme
 import dagger.hilt.android.AndroidEntryPoint
-import androidx.compose.runtime.mutableLongStateOf
-import com.github.cawboyroy.mywallet.main.presentation.EditFinancialRecord
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
