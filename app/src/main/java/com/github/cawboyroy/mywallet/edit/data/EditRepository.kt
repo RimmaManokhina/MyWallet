@@ -1,8 +1,8 @@
 package com.github.cawboyroy.mywallet.edit.data
 
+import com.github.cawboyroy.mywallet.add.presentation.FinancialRecord
 import com.github.cawboyroy.mywallet.main.data.FinancialRecordEntity
 import com.github.cawboyroy.mywallet.main.data.FinancialRecordsDao
-import com.github.cawboyroy.mywallet.add.presentation.FinancialRecord
 import javax.inject.Inject
 
 interface EditRepository {

@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import java.math.BigDecimal
 
 @Composable
 fun AddFinancialRecordScreen(
@@ -45,8 +46,8 @@ fun AddFinancialRecordScreen(
                 selectedIndex
             ) { selectedIndex = it }
 
-            var money by rememberSaveable { mutableStateOf("") }
-            MoneyField(money) { money = it }
+            var money by rememberSaveable { mutableStateOf(BigDecimal.ZERO.toString()) }
+            MoneyField(false, money) { money = it }
 
             var title by rememberSaveable { mutableStateOf("") }
             TitleField(title) { title = it }

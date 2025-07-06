@@ -66,8 +66,8 @@ fun EditFinancialRecordInner(
                 Modifier.padding(horizontal = 16.dp),
                 selectedIndex
             ) { selectedIndex = it }
-            var money by rememberSaveable { mutableStateOf(record.money.toString()) }
-            MoneyField(money) { money = it }
+            var money by rememberSaveable { mutableStateOf(record.money) }
+            MoneyField(true, money) { money = it }
 
             var title by rememberSaveable { mutableStateOf(record.title) }
             TitleField(title) { title = it }

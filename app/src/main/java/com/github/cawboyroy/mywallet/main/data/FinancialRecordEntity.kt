@@ -10,7 +10,7 @@ data class FinancialRecordEntity(
     @ColumnInfo("id")
     val id: Long,
     @ColumnInfo("money")
-    val money: Double,
+    val money: String,
     @ColumnInfo("title")
     val title: String,
     @ColumnInfo("category")
