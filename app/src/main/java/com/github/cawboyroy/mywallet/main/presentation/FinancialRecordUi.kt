@@ -18,6 +18,7 @@ interface FinancialRecordUi {
     fun sum(): BigDecimal
 
     data class DayCollapsed(
+        private val currency: String,
         private val date: String,
         private val day: Int,
         private val sum: BigDecimal,
@@ -26,9 +27,9 @@ interface FinancialRecordUi {
         @Composable
         override fun Show(actions: RecordActions, onClick: (Long) -> Unit) = DayUi(
             R.string.expand,
-            Icons.Filled.KeyboardArrowUp,
+            Icons.Filled.KeyboardArrowDown,
             date,
-            HandleMoney.formatWhole(sum.toString())
+            HandleMoney.formatWhole(currency, sum.toString())
         ) {
             actions.expand(day)
         }
@@ -39,6 +40,7 @@ interface FinancialRecordUi {
     }
 
     data class DayExpanded(
+        private val currency: String,
         private val date: String,
         private val day: Int,
         private val sum: BigDecimal,
@@ -47,9 +49,9 @@ interface FinancialRecordUi {
         @Composable
         override fun Show(actions: RecordActions, onClick: (Long) -> Unit) = DayUi(
             R.string.collapse,
-            Icons.Filled.KeyboardArrowDown,
+            Icons.Filled.KeyboardArrowUp,
             date,
-            HandleMoney.formatWhole(sum.toString())
+            HandleMoney.formatWhole(currency, sum.toString())
         ) {
             actions.collapse(day)
         }
@@ -60,6 +62,7 @@ interface FinancialRecordUi {
     }
 
     data class Base(
+        private val currency: String,
         val isExpenses: Boolean,
         val money: String,
         private val title: String,
@@ -72,7 +75,7 @@ interface FinancialRecordUi {
             FinancialRecordInListUi(
                 id = id,
                 isExpenses = isExpenses,
-                money = HandleMoney.formatWhole(money),
+                money = HandleMoney.formatWhole(currency, money),
                 title = title,
                 category = category,
                 onClick = onClick

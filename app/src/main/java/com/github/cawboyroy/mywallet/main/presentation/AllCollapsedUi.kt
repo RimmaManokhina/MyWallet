@@ -22,8 +22,10 @@ interface AllCollapsedUi : Serializable {
 
     abstract class Abstract(
         @StringRes private val description: Int,
-        private val icon: ImageVector,
-    ) : AllCollapsedUi {
+
+        ) : AllCollapsedUi {
+
+        protected abstract val icon: ImageVector
 
         protected abstract fun onClick(actions: AllDayActions)
 
@@ -39,13 +41,15 @@ interface AllCollapsedUi : Serializable {
         }
     }
 
-    data object Collapsed : Abstract(R.string.expand, Icons.Filled.KeyboardArrowDown) {
+    data object Collapsed : Abstract(R.string.expand) {
         private fun readResolve(): Any = Collapsed
+        override val icon = Icons.Filled.KeyboardArrowDown
         override fun onClick(actions: AllDayActions) = actions.expandAll()
     }
 
-    data object Expanded : Abstract(R.string.collapse, Icons.Filled.KeyboardArrowUp) {
+    data object Expanded : Abstract(R.string.collapse) {
         private fun readResolve(): Any = Collapsed
+        override val icon = Icons.Filled.KeyboardArrowUp
         override fun onClick(actions: AllDayActions) = actions.collapseAll()
     }
 }

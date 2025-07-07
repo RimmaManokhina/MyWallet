@@ -10,8 +10,8 @@ data class ScreenState(
     val collapsedIds: CollapsedIds,
 ) : Serializable {
 
-    fun separatedList(records: List<FinancialRecord>) =
-        time.separatedList(collapsedIds.value(), records)
+    fun separatedList(currency: String, records: List<FinancialRecord>) =
+        time.separatedList(currency, collapsedIds.value(), records)
 
     fun switch(isExpenses: Boolean) = copy(isExpenses = isExpenses)
 
@@ -23,7 +23,8 @@ data class ScreenState(
 
     fun expand(id: Int) = copy(collapsedIds = collapsedIds.remove(id))
 
-    fun monthNameAndSum(data: List<FinancialRecordUi>) = time.monthNameAndSum(data)
+    fun monthNameAndSum(data: List<FinancialRecordUi>, currency: String) =
+        time.monthNameAndSum(data, currency)
 
     fun collapseAll() =
         copy(allCollapsed = AllCollapsedUi.Collapsed, collapsedIds = collapsedIds.collapseAll())
