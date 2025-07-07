@@ -20,10 +20,11 @@ class ListViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     runAsync: RunAsync,
     repository: ListRepository,
-) : ViewModel(), RecordActions {
+) : ViewModel(), RecordActions, AllDayActions {
 
     val screenStateFlow = savedStateHandle.getStateFlow(
         SCREEN_STATE, ScreenState(
+            allCollapsed = AllCollapsedUi.Expanded,
             isExpenses = true,
             time = MonthsUi(System.currentTimeMillis()),
             collapsedIds = CollapsedIds(emptySet())
@@ -44,6 +45,14 @@ class ListViewModel @Inject constructor(
         ) {
             recordsMutableStateFlow.value = it
         }
+    }
+
+    override fun expandAll() {
+        savedStateHandle[SCREEN_STATE] = screenStateFlow.value.expandAll()
+    }
+
+    override fun collapseAll() {
+        savedStateHandle[SCREEN_STATE] = screenStateFlow.value.collapseAll()
     }
 
     fun switch(isExpenses: Boolean) {

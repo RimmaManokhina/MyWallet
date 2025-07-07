@@ -4,6 +4,7 @@ import com.github.cawboyroy.mywallet.add.presentation.FinancialRecord
 import java.io.Serializable
 
 data class ScreenState(
+    val allCollapsed: AllCollapsedUi,
     val isExpenses: Boolean,
     val time: MonthsUi,
     val collapsedIds: CollapsedIds,
@@ -14,13 +15,19 @@ data class ScreenState(
 
     fun switch(isExpenses: Boolean) = copy(isExpenses = isExpenses)
 
-    fun showPreviousMonth() = copy(collapsedIds = collapsedIds.clear(), time = time.previousMonth())
+    fun showPreviousMonth() = copy(time = time.previousMonth())
 
-    fun showNextMonth() = copy(collapsedIds = collapsedIds.clear(), time = time.nextMonth())
+    fun showNextMonth() = copy(time = time.nextMonth())
 
     fun collapse(id: Int) = copy(collapsedIds = collapsedIds.add(id))
 
     fun expand(id: Int) = copy(collapsedIds = collapsedIds.remove(id))
 
     fun monthNameAndSum(data: List<FinancialRecordUi>) = time.monthNameAndSum(data)
+
+    fun collapseAll() =
+        copy(allCollapsed = AllCollapsedUi.Collapsed, collapsedIds = collapsedIds.collapseAll())
+
+    fun expandAll() =
+        copy(allCollapsed = AllCollapsedUi.Expanded, collapsedIds = collapsedIds.expandAll())
 }
