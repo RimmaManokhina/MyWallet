@@ -15,4 +15,5 @@
     <string name="collapse">collapse</string>
     <string name="delete">delete</string>
     <string name="confirm_delete">Confirm Delete</string>
+    <string name="currency">Choose currency</string>
 </resources>

@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.cawboyroy.mywallet.core.RunAsync
+import com.github.cawboyroy.mywallet.currency.data.ChosenCurrencyRepository
 import com.github.cawboyroy.mywallet.main.data.ListRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,10 +18,13 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ListViewModel @Inject constructor(
+    private val chosenCurrencyRepository: ChosenCurrencyRepository,
     private val savedStateHandle: SavedStateHandle,
     runAsync: RunAsync,
     repository: ListRepository,
 ) : ViewModel(), RecordActions, AllDayActions {
+
+    fun chosenCurrency() = chosenCurrencyRepository.value()
 
     val screenStateFlow = savedStateHandle.getStateFlow(
         SCREEN_STATE, ScreenState(
@@ -40,7 +44,7 @@ class ListViewModel @Inject constructor(
             scope = viewModelScope,
             flow = screenStateFlow.flatMapLatest { screenState ->
                 repository.list(screenState.isExpenses, screenState.time)
-                    .map { records -> screenState.separatedList(records) }
+                    .map { records -> screenState.separatedList(chosenCurrency(), records) }
             }
         ) {
             recordsMutableStateFlow.value = it

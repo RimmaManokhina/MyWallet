@@ -64,8 +64,8 @@ object HandleMoney {
 
     }
 
-    fun formatWhole(source: String): String {
-        return if (source.isEmpty())
+    fun formatWhole(currency: String, source: String): String {
+        return "$currency " + if (source.isEmpty() || source == "0")
             "0"
         else
             if (source.contains(".")) {

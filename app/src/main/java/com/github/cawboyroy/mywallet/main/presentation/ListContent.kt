@@ -62,11 +62,21 @@ fun ListContent(paddingValues: PaddingValues, onRecordClick: (Long) -> Unit) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val monthAndTotal =
+                state.monthNameAndSum(records, viewModel.chosenCurrency())
             Text(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(all = 4.dp),
-                text = state.monthNameAndSum(records),
+                modifier = Modifier.padding(all = 4.dp),
+                text = monthAndTotal.month,
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    color = LocalContentColor.current,
+                    textAlign = TextAlign.Center
+                )
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                modifier = Modifier.padding(all = 4.dp),
+                text = monthAndTotal.total,
                 style = TextStyle(
                     fontSize = 18.sp,
                     color = LocalContentColor.current,

@@ -9,9 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.github.cawboyroy.mywallet.R
+import androidx.activity.compose.BackHandler
 
 @Composable
 fun HomeScreen(navController: NavController) {
+    BackHandler { }
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
