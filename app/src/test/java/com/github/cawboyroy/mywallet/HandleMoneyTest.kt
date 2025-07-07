@@ -27,11 +27,11 @@ class HandleMoneyTest {
 
     @Test
     fun formatWhole() = with(HandleMoney) {
-        assertEquals("0", formatWhole(""))
-        assertEquals("123", formatWhole("123"))
-        assertEquals("1,235.4", formatWhole("1235.4"))
-        assertEquals("1,235", formatWhole("1235."))
-        assertEquals("1,235", formatWhole("1235.0"))
+        assertEquals("$ 0", formatWhole("$", ""))
+        assertEquals("$ 123", formatWhole("$", "123"))
+        assertEquals("$ 1,235.4", formatWhole("$", "1235.4"))
+        assertEquals("$ 1,235", formatWhole("$", "1235."))
+        assertEquals("$ 1,235", formatWhole("$", "1235.0"))
     }
 
     @Test
