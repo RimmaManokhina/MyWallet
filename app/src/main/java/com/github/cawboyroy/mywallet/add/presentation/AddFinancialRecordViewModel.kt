@@ -36,7 +36,7 @@ class AddFinancialRecordViewModel @Inject constructor(
             background = {
                 addRepository.add(
                     FinancialRecord(
-                        money,
+                        HandleMoney.finalize(money),
                         title,
                         category,
                         description,
@@ -54,10 +54,7 @@ class AddFinancialRecordViewModel @Inject constructor(
         money: String,
         title: String,
         category: String,
-    ): Boolean {
-        var moneyValid = money.isValid()
-        return moneyValid && title.isNotEmpty() && category.isNotEmpty()
-    }
+    ) = money.isValid() && title.isNotEmpty() && category.isNotEmpty()
 }
 
 data class FinancialRecord(

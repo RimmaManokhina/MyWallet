@@ -5,9 +5,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.github.cawboyroy.mywallet.core.RunAsync
 import com.github.cawboyroy.mywallet.add.presentation.Close
 import com.github.cawboyroy.mywallet.add.presentation.FinancialRecord
+import com.github.cawboyroy.mywallet.add.presentation.HandleMoney
+import com.github.cawboyroy.mywallet.core.RunAsync
 import com.github.cawboyroy.mywallet.main.data.EditRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,7 @@ import javax.inject.Inject
 class EditFinancialRecordViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val runAsync: RunAsync,
-    private val repository: EditRepository
+    private val repository: EditRepository,
 ) : ViewModel() {
 
     private val closeState: MutableStateFlow<Close> = MutableStateFlow(Close.Empty)
@@ -47,7 +48,7 @@ class EditFinancialRecordViewModel @Inject constructor(
         description: String,
         id: Long,
     ) = FinancialRecord(
-        money,
+        HandleMoney.finalize(money),
         title,
         category,
         description,
@@ -71,12 +72,12 @@ class EditFinancialRecordViewModel @Inject constructor(
         title: String,
         category: String,
         time: Long,
-        description: String
+        description: String,
     ) {
         runAsync.runAsync(scope = viewModelScope, background = {
             repository.edit(
                 FinancialRecord(
-                    money,
+                    HandleMoney.finalize(money),
                     title,
                     category,
                     description,
@@ -111,7 +112,7 @@ interface EditState : Serializable {
         override fun Show(
             id: Long,
             viewModel: EditFinancialRecordViewModel,
-            navController: NavController
+            navController: NavController,
         ) {
             viewModel.loadRecord(id)
         }
@@ -123,7 +124,7 @@ interface EditState : Serializable {
         override fun Show(
             id: Long,
             viewModel: EditFinancialRecordViewModel,
-            navController: NavController
+            navController: NavController,
         ) {
             EditFinancialRecordInner(viewModel, record, navController)
         }

@@ -1,45 +1,67 @@
 package com.github.cawboyroy.mywallet.add.presentation
 
-import java.math.BigDecimal
 import java.math.BigInteger
 
 object HandleMoney {
 
-    fun formatMainPart(bigInteger: BigInteger): String {
-        if (BigInteger.ZERO.equals(bigInteger))
+    /**
+     * @param raw is BigDecimal in String
+     * @return formatted
+     */
+    fun ui(raw: String): String {
+        if (raw == "" || raw == "0")
             return ""
-        val string = bigInteger.toString()
-        return string.reversed()
+        if (raw == ".")
+            return "."
+
+        if (raw.contains(".")) {
+            val parts = raw.split(".")
+            val left = parts[0]
+            val right = parts[1]
+            val leftUi = format(left)
+            return "$leftUi.$right"
+        } else {
+            return format(raw)
+        }
+    }
+
+    /**
+     * @param ui is user input could be anything
+     * @return BigDecimal in String
+     */
+    fun value(ui: String): String {
+        if (ui.contains(".")) {
+            val parts = ui.split(".")
+            val left = filterOnlyDigits(parts[0]).trimStart('0')
+            val finalLeft = left.ifEmpty { "0" }
+
+            val right = filterOnlyDigits(parts[1])
+            val last2: String = right.take(2)
+            val finally = if (last2 == "00") "0" else last2
+            return "$finalLeft.$finally"
+        } else {
+            return filterOnlyDigits(ui.trimStart('0'))
+        }
+    }
+
+    private fun format(source: String): String {
+        return source.reversed()
             .chunked(3)
             .joinToString(separator = ",")
             .reversed()
     }
 
-    fun split(source: String): Pair<BigInteger, String> {
-        val bigDecimal = BigDecimal(source)
-        if (bigDecimal == BigDecimal.ZERO)
-            return Pair(BigInteger.ZERO, "")
-        val rest = source.split(".")[1]
-        val bigInteger = bigDecimal.toBigInteger()
-        return Pair(bigInteger, rest)
+    private fun formatMainPart(bigInteger: BigInteger): String {
+        if (BigInteger.ZERO.equals(bigInteger))
+            return ""
+        val string = bigInteger.toString()
+        return format(string)
     }
 
-    fun handleMainPart(source: String): String {
-        val value = filterOnlyDigits(source)
-        return if (value.isEmpty()) "0" else value
-    }
-
-    fun filterOnlyDigits(source: String): String {
+    private fun filterOnlyDigits(source: String): String {
         return source.filter { it.isDigit() }
-    }
 
-    fun handleCents(source: String): String {
-        val digits = filterOnlyDigits(source)
-        if (digits == "00")
-            return "0"
-        if (digits.length < 3)
-            return digits
-        return digits.take(2)
+
     }
 
     fun formatWhole(source: String): String {
@@ -54,5 +76,13 @@ object HandleMoney {
                     formatMainPart(BigInteger(parts[0])) + "." + parts[1]
             } else
                 formatMainPart(BigInteger(source))
+    }
+
+    fun finalize(money: String): String {
+        if (money.endsWith("."))
+            return money.substring(0, money.indexOf("."))
+        if (money.endsWith(".0"))
+            return money.substring(0, money.indexOf(".0"))
+        return money
     }
 }
