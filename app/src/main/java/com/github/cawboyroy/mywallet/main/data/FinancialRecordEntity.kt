@@ -1,11 +1,11 @@
-package com.github.cawboyroy.mywallet.add.data
+package com.github.cawboyroy.mywallet.main.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "expenses")
-data class ExpenseEntity(
+@Entity(tableName = "financial_records")
+data class FinancialRecordEntity(
     @PrimaryKey
     @ColumnInfo("id")
     val id: Long,
@@ -18,5 +18,7 @@ data class ExpenseEntity(
     @ColumnInfo("description")
     val description: String,
     @ColumnInfo("time")
-    val time: Long
+    val time: Long,
+    @ColumnInfo("isExpenses")
+    val isExpenses: Boolean,
 )

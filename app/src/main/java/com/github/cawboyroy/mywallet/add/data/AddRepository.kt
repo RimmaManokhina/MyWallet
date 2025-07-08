@@ -1,25 +1,25 @@
 package com.github.cawboyroy.mywallet.add.data
 
-import com.github.cawboyroy.mywallet.add.presentation.ExpenseRecord
+import com.github.cawboyroy.mywallet.add.presentation.FinancialRecord
+import com.github.cawboyroy.mywallet.main.data.FinancialRecordEntity
+import com.github.cawboyroy.mywallet.main.data.FinancialRecordsDao
 import javax.inject.Inject
 
 interface AddRepository {
-
-    suspend fun add(record: ExpenseRecord)
-
+    suspend fun add(record: FinancialRecord)
     class Base @Inject constructor(
-        private val dao: ExpensesDao,
+        private val dao: FinancialRecordsDao,
     ) : AddRepository {
-
-        override suspend fun add(record: ExpenseRecord) {
+        override suspend fun add(record: FinancialRecord) {
             dao.add(
-                ExpenseEntity(
+                FinancialRecordEntity(
                     id = record.id,
                     money = record.money,
                     title = record.title,
                     category = record.category,
                     description = record.description,
-                    time = record.time
+                    time = record.time,
+                    isExpenses = record.isExpenses
                 )
             )
         }

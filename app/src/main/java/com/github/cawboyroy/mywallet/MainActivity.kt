@@ -4,18 +4,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
-import com.github.cawboyroy.mywallet.add.presentation.AddExpenses
-import com.github.cawboyroy.mywallet.add.presentation.ListContent
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.github.cawboyroy.mywallet.add.presentation.AddFinancialRecordScreen
+import com.github.cawboyroy.mywallet.currency.presentation.ChooseCurrencyScreen
+import com.github.cawboyroy.mywallet.edit.presentation.EditFinancialRecordScreen
+import com.github.cawboyroy.mywallet.main.presentation.MainScreen
 import com.github.cawboyroy.mywallet.ui.theme.MyWalletTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,23 +25,20 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MyWalletTheme {
-                var showBottomSheet by remember { mutableStateOf(false) }
-                Scaffold(
-                    floatingActionButton = {
-                        FloatingActionButton(
-                            onClick = { showBottomSheet = true }
-                        ) {
-                            Icon(
-                                Icons.Filled.Add,
-                                contentDescription = stringResource(R.string.add)
-                            )
-                        }
-                    }
-                ) { contentPadding ->
-                    ListContent(contentPadding)
+                val navController: NavHostController = rememberNavController()
 
-                    if (showBottomSheet) //todo replace by navController
-                        AddExpenses { showBottomSheet = false }
+                NavHost(navController = navController, startDestination = "main") {
+                    composable("main") { MainScreen(navController) }
+                    composable("choose currency") { ChooseCurrencyScreen(navController) }
+                    composable("add") { AddFinancialRecordScreen(navController) }
+                    composable(
+                        route = "edit/{recordId}",
+                        arguments = listOf(navArgument("recordId") { type = NavType.LongType })
+                    ) { backStackEntry ->
+                        val recordId = backStackEntry.arguments?.getLong("recordId")
+                            ?: throw IllegalStateException("recordId is null")
+                        EditFinancialRecordScreen(recordId, navController)
+                    }
                 }
             }
         }

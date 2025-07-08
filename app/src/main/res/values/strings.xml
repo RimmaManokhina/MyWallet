@@ -1,10 +1,19 @@
 <resources>
-    <string name="app_name">MyWallet</string>
+    <string name="app_name">SimplyWallet</string>
     <string name="save">Save</string>
     <string name="add">add</string>
     <string name="choose_time">Choose date and time</string>
-    <string name="money">Money</string>
+    <string name="money">Money (with cents)</string>
     <string name="title">Title</string>
     <string name="category">Category</string>
     <string name="description">Description</string>
+    <string name="expenses">Expenses</string>
+    <string name="incomes">Incomes</string>
+    <string name="previous_month">previous month</string>
+    <string name="next_month">next month</string>
+    <string name="expand">expand</string>
+    <string name="collapse">collapse</string>
+    <string name="delete">delete</string>
+    <string name="confirm_delete">Confirm Delete</string>
+    <string name="currency">Choose currency</string>
 </resources>

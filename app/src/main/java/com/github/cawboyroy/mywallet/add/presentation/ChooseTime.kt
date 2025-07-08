@@ -212,7 +212,7 @@ fun ShowDatePickerButton(onClick: () -> Unit) {
 fun ShowDatePicker(
     datePickerState: DatePickerState,
     dismiss: () -> Unit,
-    confirm: () -> Unit,
+    confirm: () -> Unit
 ) {
     DatePickerDialog(
         onDismissRequest = dismiss,

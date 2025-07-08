@@ -17,7 +17,7 @@ interface RunAsync {
     fun <T : Any> runFlow(
         scope: CoroutineScope,
         flow: Flow<T>,
-        onEach: suspend (T) -> Unit,
+        onEach: suspend (T) -> Unit
     )
 
     class Base @Inject constructor() : RunAsync {
@@ -25,7 +25,7 @@ interface RunAsync {
         override fun <T : Any> runAsync(
             scope: CoroutineScope,
             background: suspend () -> T,
-            ui: (T) -> Unit,
+            ui: (T) -> Unit
         ) {
             scope.launch(Dispatchers.IO) {
                 val result = background.invoke()
@@ -38,7 +38,7 @@ interface RunAsync {
         override fun <T : Any> runFlow(
             scope: CoroutineScope,
             flow: Flow<T>,
-            onEach: suspend (T) -> Unit,
+            onEach: suspend (T) -> Unit
         ) {
             flow.onEach(onEach).flowOn(Dispatchers.IO).launchIn(scope)
         }
