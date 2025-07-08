@@ -23,19 +23,17 @@ interface ImportExportRepository {
     class Base @Inject constructor(
         private val dao: FinancialRecordsDao,
         @ApplicationContext private val context: Context,
-    ) : ImportExportRepository {
+        private val encryption: Encryption,
+        ) : ImportExportRepository {
 
         private val gson: Gson = Gson()
         private val type = object : TypeToken<List<FinancialRecordEntity>>() {}.type
-        private val formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy-HH:mm")
+        private val formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy-HH-mm")
 
         override suspend fun import(uri: Uri): Boolean = try {
-            val json = context.contentResolver.openInputStream(uri)?.bufferedReader()
-                ?.use { it.readText() }
-            val transactions: List<FinancialRecordEntity> = if (json.isNullOrEmpty())
-                emptyList()
-            else
-                gson.fromJson(json, type)
+            val encryptedFromOuterFile = context.contentResolver.openInputStream(uri)!!.readBytes()
+            val decrypted = encryption.decrypted(encryptedFromOuterFile)
+            val transactions: List<FinancialRecordEntity> = gson.fromJson(decrypted, type)
             dao.clearAll()
             dao.addAll(transactions)
             true
@@ -51,11 +49,9 @@ interface ImportExportRepository {
             val json = gson.toJson(transactions)
             val appName = context.getString(R.string.app_name)
             val file = File(context.cacheDir, "$appName-backup-$formattedDateTime.json")
-            file.writeText(json)
+            file.writeBytes(encryption.encrypted(json))
             val uri: Uri = FileProvider.getUriForFile(
-                context,
-                "${context.packageName}.provider",
-                file
+                context, "${context.packageName}.provider", file
             )
             return uri.toString()
         }
