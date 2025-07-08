@@ -10,9 +10,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -42,9 +42,11 @@ class ListViewModel @Inject constructor(
     init {
         runAsync.runFlow(
             scope = viewModelScope,
-            flow = screenStateFlow.flatMapLatest { screenState ->
+            flow = screenStateFlow.combine(chosenCurrency()) { screenState, currency ->
+                Pair(screenState, currency)
+            }.flatMapLatest { (screenState, currency) ->
                 repository.list(screenState.isExpenses, screenState.time)
-                    .map { records -> screenState.separatedList(chosenCurrency(), records) }
+                    .map { records -> screenState.separatedList(currency, records) }
             }
         ) {
             recordsMutableStateFlow.value = it

@@ -65,7 +65,7 @@ object HandleMoney {
     }
 
     fun formatWhole(currency: String, source: String): String {
-        return "$currency " + if (source.isEmpty() || source == "0")
+        return ("$currency " + if (source.isEmpty() || source == "0")
             "0"
         else
             if (source.contains(".")) {
@@ -75,7 +75,7 @@ object HandleMoney {
                 else
                     formatMainPart(BigInteger(parts[0])) + "." + parts[1]
             } else
-                formatMainPart(BigInteger(source))
+                formatMainPart(BigInteger(source))).trim()
     }
 
     fun finalize(money: String): String {

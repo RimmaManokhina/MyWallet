@@ -42,7 +42,9 @@ android {
 }
 
 dependencies {
-    implementation("androidx.navigation:navigation-compose:2.9.1")
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.datastore.core)
+    implementation(libs.androidx.navigation.compose.v291)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
     androidTestImplementation(libs.androidx.room.testing)

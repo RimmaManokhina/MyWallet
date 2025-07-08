@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,6 +43,8 @@ fun ChooseCurrencyScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     var input by rememberSaveable { mutableStateOf("") }
     val list = viewModel.state.collectAsStateWithLifecycle().value
+    val close = viewModel.close.collectAsStateWithLifecycle().value
+    close.Show(navController)
 
     Scaffold { contentPadding ->
         Column(
@@ -52,9 +55,18 @@ fun ChooseCurrencyScreen(navController: NavController) {
         ) {
             SaveButton(enabled = input.trim().isNotEmpty()) {
                 viewModel.save(input)
-                navController.navigate("home")
             }
             Title(R.string.currency)
+            val alreadyChosenCurrency: String =
+                viewModel.chosenCurrency().collectAsStateWithLifecycle("").value
+            if (alreadyChosenCurrency.isNotEmpty())
+                Text(
+                    text = alreadyChosenCurrency,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .fillMaxWidth()
+                )
             BasicTextField(
                 cursorBrush = SolidColor(LocalContentColor.current),
                 textStyle = TextStyle(fontSize = 18.sp, color = LocalContentColor.current),

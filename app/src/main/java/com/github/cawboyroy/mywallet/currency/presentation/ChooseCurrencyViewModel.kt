@@ -3,13 +3,16 @@ package com.github.cawboyroy.mywallet.currency.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.cawboyroy.mywallet.add.presentation.Close
 import com.github.cawboyroy.mywallet.core.RunAsync
 import com.github.cawboyroy.mywallet.currency.data.ChosenCurrencyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.Currency
 import java.util.Locale
 import javax.inject.Inject
+
 
 @HiltViewModel
 class ChooseCurrencyViewModel @Inject constructor(
@@ -17,6 +20,10 @@ class ChooseCurrencyViewModel @Inject constructor(
     private val chosenCurrencyRepository: ChosenCurrencyRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
+
+    private val closeState: MutableStateFlow<Close> = MutableStateFlow(Close.Empty)
+    val close: StateFlow<Close>
+        get() = closeState
 
     private val allCurrencies = Currency.getAvailableCurrencies()
 
@@ -59,7 +66,11 @@ class ChooseCurrencyViewModel @Inject constructor(
         return symbol + middlePart + currency.displayName //US DOLLAR
     }
 
-    fun save(input: String) = chosenCurrencyRepository.save(input)
+    fun save(input: String) = runAsync.runAsync(viewModelScope, {
+        chosenCurrencyRepository.save(input)
+    }) {
+        closeState.value = Close.Back
+    }
 
     companion object {
         private const val CURRENCIES_KEY = "currency"
