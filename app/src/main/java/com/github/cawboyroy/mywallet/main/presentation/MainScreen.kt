@@ -22,7 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.github.cawboyroy.mywallet.settings.SettingsScreen
+import com.github.cawboyroy.mywallet.settings.presentation.SettingsScreen
 
 @Composable
 fun MainScreen(outerNavController: NavController) {

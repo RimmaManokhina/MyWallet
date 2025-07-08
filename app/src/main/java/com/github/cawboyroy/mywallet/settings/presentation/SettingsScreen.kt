@@ -1,4 +1,4 @@
-package com.github.cawboyroy.mywallet.settings
+package com.github.cawboyroy.mywallet.settings.presentation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,7 +32,16 @@ fun SettingsScreen(outerNavController: NavController) {
             ) {
                 Text(stringResource(R.string.currency))
             }
-            //todo import export button
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                onClick = {
+                    outerNavController.navigate("import export")
+                }
+            ) {
+                Text(stringResource(R.string.import_export))
+            }
         }
     }
 }

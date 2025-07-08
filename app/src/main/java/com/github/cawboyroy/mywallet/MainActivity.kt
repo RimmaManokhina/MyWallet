@@ -14,6 +14,7 @@ import com.github.cawboyroy.mywallet.add.presentation.AddFinancialRecordScreen
 import com.github.cawboyroy.mywallet.currency.presentation.ChooseCurrencyScreen
 import com.github.cawboyroy.mywallet.edit.presentation.EditFinancialRecordScreen
 import com.github.cawboyroy.mywallet.main.presentation.MainScreen
+import com.github.cawboyroy.mywallet.settings.presentation.ImportExportScreen
 import com.github.cawboyroy.mywallet.ui.theme.MyWalletTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,6 +31,7 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = "main") {
                     composable("main") { MainScreen(navController) }
                     composable("choose currency") { ChooseCurrencyScreen(navController) }
+                    composable("import export") { ImportExportScreen() }
                     composable("add") { AddFinancialRecordScreen(navController) }
                     composable(
                         route = "edit/{recordId}",
