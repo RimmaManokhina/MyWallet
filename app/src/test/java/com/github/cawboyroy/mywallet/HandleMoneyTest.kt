@@ -32,6 +32,7 @@ class HandleMoneyTest {
         assertEquals("$ 1,235.4", formatWhole("$", "1235.4"))
         assertEquals("$ 1,235", formatWhole("$", "1235."))
         assertEquals("$ 1,235", formatWhole("$", "1235.0"))
+        assertEquals("1,235", formatWhole("", "1235.0"))
     }
 
     @Test

@@ -1,31 +1,41 @@
 package com.github.cawboyroy.mywallet.currency.data
 
 import android.content.Context
-import androidx.core.content.edit
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import com.github.cawboyroy.mywallet.R
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Singleton
 
 interface ChosenCurrencyRepository {
 
-    fun value(): String
+    fun value(): Flow<String>
 
-    fun save(value: String)
+    suspend fun save(value: String)
 
+    @Singleton
     class Base @Inject constructor(
-        @ApplicationContext context: Context,
+        @ApplicationContext private val context: Context,
     ) : ChosenCurrencyRepository {
 
-        private val sharedPreferences = context.getSharedPreferences(
-            context.getString(R.string.app_name), Context.MODE_PRIVATE
-        )
+        private val Context.dataStore by preferencesDataStore(name = context.getString(R.string.app_name))
+        private val preferencesKey = stringPreferencesKey("currency")
 
-        override fun value(): String {
-            return sharedPreferences.getString("chosen currency", "") ?: ""
+
+        override fun value(): Flow<String> {
+            return context.dataStore.data.map { preferences ->
+                preferences[preferencesKey] ?: ""
+            }
         }
 
-        override fun save(value: String) {
-            sharedPreferences.edit { putString("chosen currency", value) }
+        override suspend fun save(value: String) {
+            context.dataStore.edit { preferences ->
+                preferences[preferencesKey] = value
+            }
         }
     }
 }

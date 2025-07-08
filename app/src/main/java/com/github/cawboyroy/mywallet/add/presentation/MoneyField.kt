@@ -29,18 +29,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.cawboyroy.mywallet.R
+import com.github.cawboyroy.mywallet.currency.presentation.ChooseCurrencyViewModel
 
 @Composable
 fun MoneyField(edit: Boolean, value: String, onValueChanged: (String) -> Unit) {
     val viewModel = hiltViewModel<ChooseCurrencyViewModel>()
     Title(R.string.money)
     val ui: String = HandleMoney.ui(raw = value)
-
-
     val firstText by remember { mutableStateOf(value) }
-
-
+    val currency = viewModel.chosenCurrency().collectAsStateWithLifecycle("").value
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -48,7 +47,7 @@ fun MoneyField(edit: Boolean, value: String, onValueChanged: (String) -> Unit) {
     ) {
         Spacer(modifier = Modifier.width(16.dp))
         Text(
-            text = viewModel.chosenCurrency(),
+            text = currency,
             style = TextStyle(
                 fontSize = 18.sp,
                 textAlign = TextAlign.End,
@@ -90,7 +89,7 @@ fun MoneyField(edit: Boolean, value: String, onValueChanged: (String) -> Unit) {
     }
     if (edit && firstText != HandleMoney.finalize(value)) SelectionContainer {
         Text(
-            text = HandleMoney.formatWhole(viewModel.chosenCurrency(), firstText),
+            text = HandleMoney.formatWhole(currency, firstText),
             textAlign = TextAlign.End,
             modifier = Modifier
                 .fillMaxWidth()

@@ -62,8 +62,8 @@ fun ListContent(paddingValues: PaddingValues, onRecordClick: (Long) -> Unit) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val monthAndTotal =
-                state.monthNameAndSum(records, viewModel.chosenCurrency())
+            val currency = viewModel.chosenCurrency().collectAsStateWithLifecycle("").value
+            val monthAndTotal = state.monthNameAndSum(records, currency)
             Text(
                 modifier = Modifier.padding(all = 4.dp),
                 text = monthAndTotal.month,
