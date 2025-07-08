@@ -18,7 +18,7 @@ interface ImportExportRepository {
 
     suspend fun import(uri: Uri): Boolean
 
-    suspend fun export(): Uri
+    suspend fun export(): String
 
     class Base @Inject constructor(
         private val dao: FinancialRecordsDao,
@@ -44,7 +44,7 @@ interface ImportExportRepository {
             false
         }
 
-        override suspend fun export(): Uri {
+        override suspend fun export(): String {
             val currentDateTime = LocalDateTime.now()
             val formattedDateTime = currentDateTime.format(formatter)
             val transactions = dao.all()
@@ -52,11 +52,12 @@ interface ImportExportRepository {
             val appName = context.getString(R.string.app_name)
             val file = File(context.cacheDir, "$appName-backup-$formattedDateTime.json")
             file.writeText(json)
-            return FileProvider.getUriForFile(
+            val uri: Uri = FileProvider.getUriForFile(
                 context,
                 "${context.packageName}.provider",
                 file
             )
+            return uri.toString()
         }
     }
 }

@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import com.github.cawboyroy.mywallet.R
 import java.io.Serializable
 
@@ -27,7 +28,7 @@ interface ImportExportState : Serializable {
     fun Show(
         activity: Context,
         launcher: ManagedActivityResultLauncher<Array<String>, Uri?>,
-        viewModel: ImportExportViewModel
+        viewModel: ImportExportViewModel,
     )
 
     data object Initial : ImportExportState {
@@ -37,7 +38,7 @@ interface ImportExportState : Serializable {
         override fun Show(
             activity: Context,
             launcher: ManagedActivityResultLauncher<Array<String>, Uri?>,
-            viewModel: ImportExportViewModel
+            viewModel: ImportExportViewModel,
         ) {
             Button(
                 modifier = Modifier.Companion
@@ -68,7 +69,7 @@ interface ImportExportState : Serializable {
         override fun Show(
             activity: Context,
             launcher: ManagedActivityResultLauncher<Array<String>, Uri?>,
-            viewModel: ImportExportViewModel
+            viewModel: ImportExportViewModel,
         ) {
             Initial.Show(activity, launcher, viewModel)
             Text(
@@ -87,7 +88,7 @@ interface ImportExportState : Serializable {
         override fun Show(
             activity: Context,
             launcher: ManagedActivityResultLauncher<Array<String>, Uri?>,
-            viewModel: ImportExportViewModel
+            viewModel: ImportExportViewModel,
         ) {
             Initial.Show(activity, launcher, viewModel)
             Text(
@@ -106,7 +107,7 @@ interface ImportExportState : Serializable {
         override fun Show(
             activity: Context,
             launcher: ManagedActivityResultLauncher<Array<String>, Uri?>,
-            viewModel: ImportExportViewModel
+            viewModel: ImportExportViewModel,
         ) {
             BackHandler { }
             CircularProgressIndicator()
@@ -128,7 +129,7 @@ interface ImportExportState : Serializable {
         override fun Show(
             activity: Context,
             launcher: ManagedActivityResultLauncher<Array<String>, Uri?>,
-            viewModel: ImportExportViewModel
+            viewModel: ImportExportViewModel,
         ) {
             BackHandler { }
             CircularProgressIndicator()
@@ -144,21 +145,21 @@ interface ImportExportState : Serializable {
     }
 
     data class Share(
-        private val uri: Uri,
-        private val timeId: Long = System.currentTimeMillis()
+        private val uri: String,
+        private val timeId: Long = System.currentTimeMillis(),
     ) : ImportExportState {
 
         @Composable
         override fun Show(
             activity: Context,
             launcher: ManagedActivityResultLauncher<Array<String>, Uri?>,
-            viewModel: ImportExportViewModel
+            viewModel: ImportExportViewModel,
         ) {
             Initial.Show(activity, launcher, viewModel)
             LaunchedEffect(timeId) {
                 val intent = Intent(Intent.ACTION_SEND)
                     .setType("application/json")
-                    .putExtra(Intent.EXTRA_STREAM, uri)
+                    .putExtra(Intent.EXTRA_STREAM, uri.toUri())
                     .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
                 activity.startActivity(
