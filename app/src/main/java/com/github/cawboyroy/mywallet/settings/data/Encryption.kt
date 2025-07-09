@@ -10,54 +10,46 @@ import javax.crypto.spec.SecretKeySpec
 import javax.inject.Inject
 
 interface Encryption {
-    suspend fun encrypted(notEncryptedSource: String): ByteArray
 
-    suspend fun decrypted(encryptedEarlier: ByteArray): String
+    suspend fun encrypted(password: String, notEncryptedSource: String): ByteArray
 
-    class Base @Inject constructor(
-    ) : Encryption {
+    suspend fun decrypted(password: String, encryptedEarlier: ByteArray): String
 
-        private val password = "securePass123"//todo hardcoded
+    class Base @Inject constructor() : Encryption {
 
-        override suspend fun encrypted(notEncryptedSource: String): ByteArray {
-            return encryptJson(notEncryptedSource)
-        }
 
-        override suspend fun decrypted(encryptedEarlier: ByteArray): String {
-            return decryptJson(encryptedEarlier)
-        }
+        override suspend fun encrypted(password: String, notEncryptedSource: String): ByteArray {
 
-        private fun deriveKeyFromPassword(salt: ByteArray): SecretKey {
-            val factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")
-            val spec = PBEKeySpec(password.toCharArray(), salt, 100_000, 256)
-            val tmp = factory.generateSecret(spec)
-            return SecretKeySpec(tmp.encoded, "AES")
-        }
-
-        private fun encryptJson(json: String): ByteArray {
             val salt = ByteArray(16).also { SecureRandom().nextBytes(it) }
             val iv = ByteArray(12).also { SecureRandom().nextBytes(it) }
-            val key = deriveKeyFromPassword(salt)
+            val key = deriveKeyFromPassword(password, salt)
 
             val cipher = Cipher.getInstance("AES/GCM/NoPadding")
             cipher.init(Cipher.ENCRYPT_MODE, key, GCMParameterSpec(128, iv))
-            val encrypted = cipher.doFinal(json.toByteArray(Charsets.UTF_8))
+            val encrypted = cipher.doFinal(notEncryptedSource.toByteArray(Charsets.UTF_8))
 
             // saving: [salt (16)] + [iv (12)] + [encrypted]
             return salt + iv + encrypted
         }
 
-        private fun decryptJson(data: ByteArray): String {
-            val salt = data.copyOfRange(0, 16)
-            val iv = data.copyOfRange(16, 28)
-            val encrypted = data.copyOfRange(28, data.size)
+        override suspend fun decrypted(password: String, encryptedEarlier: ByteArray): String {
+            val salt = encryptedEarlier.copyOfRange(0, 16)
+            val iv = encryptedEarlier.copyOfRange(16, 28)
+            val encrypted = encryptedEarlier.copyOfRange(28, encryptedEarlier.size)
 
-            val key = deriveKeyFromPassword(salt)
+            val key = deriveKeyFromPassword(password, salt)
             val cipher = Cipher.getInstance("AES/GCM/NoPadding")
             cipher.init(Cipher.DECRYPT_MODE, key, GCMParameterSpec(128, iv))
             val decrypted = cipher.doFinal(encrypted)
 
             return String(decrypted, Charsets.UTF_8)
+        }
+
+        private fun deriveKeyFromPassword(password: String, salt: ByteArray): SecretKey {
+            val factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")
+            val spec = PBEKeySpec(password.toCharArray(), salt, 100_000, 256)
+            val tmp = factory.generateSecret(spec)
+            return SecretKeySpec(tmp.encoded, "AES")
         }
     }
 }
