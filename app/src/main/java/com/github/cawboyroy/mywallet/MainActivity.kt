@@ -27,7 +27,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyWalletTheme {
                 val navController: NavHostController = rememberNavController()
-
                 NavHost(navController = navController, startDestination = "main") {
                     composable("main") { MainScreen(navController) }
                     composable("choose currency") { ChooseCurrencyScreen(navController) }

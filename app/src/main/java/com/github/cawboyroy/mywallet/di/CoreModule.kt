@@ -16,6 +16,5 @@ abstract class CoreBindsModule {
     abstract fun bindsRunAsync(runAsync: RunAsync.Base): RunAsync
 
     @Binds
-    abstract fun bindsChosenCurrency(
-        chosenCurrencyRepository: ChosenCurrencyRepository.Base): ChosenCurrencyRepository
+    abstract fun bindsChosenCurrency(chosenCurrencyRepository: ChosenCurrencyRepository.Base): ChosenCurrencyRepository
 }

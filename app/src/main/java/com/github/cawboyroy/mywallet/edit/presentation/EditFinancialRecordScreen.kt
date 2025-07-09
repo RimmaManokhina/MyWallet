@@ -70,10 +70,14 @@ fun EditFinancialRecordInner(
             MoneyField(true, money) { money = it }
 
             var title by rememberSaveable { mutableStateOf(record.title) }
-            TitleField(title) { title = it }
 
             var category by rememberSaveable { mutableStateOf(record.category) }
-            CategoryField(category) { category = it }
+
+            val onCategoryChange: (String) -> Unit = { category = it }
+
+            val isExpenses: Boolean = selectedIndex == 0
+            TitleField(title, isExpenses, onCategoryChange) { title = it }
+            CategoryField(category, isExpenses, onCategoryChange)
 
             var time by rememberSaveable { mutableLongStateOf(record.time) }
             ChooseTime(time) { time = it }
@@ -89,7 +93,7 @@ fun EditFinancialRecordInner(
                 SaveButton(
                     viewModel.canSave(
                         record,
-                        selectedIndex == 0,
+                        isExpenses,
                         money,
                         title,
                         category,
@@ -100,7 +104,7 @@ fun EditFinancialRecordInner(
                 ) {
                     viewModel.edit(
                         record.id,
-                        selectedIndex == 0,
+                        isExpenses,
                         money,
                         title,
                         category,
