@@ -50,10 +50,14 @@ fun AddFinancialRecordScreen(
             MoneyField(false, money) { money = it }
 
             var title by rememberSaveable { mutableStateOf("") }
-            TitleField(title) { title = it }
 
             var category by rememberSaveable { mutableStateOf("") }
-            CategoryField(category) { category = it }
+
+            val onCategoryChange: (String) -> Unit = { category = it }
+
+            val isExpenses: Boolean = selectedIndex == 0
+            TitleField(title, isExpenses, onCategoryChange) { title = it }
+            CategoryField(category, isExpenses, onCategoryChange)
 
             var time by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
             ChooseTime(time) { time = it }
@@ -63,7 +67,7 @@ fun AddFinancialRecordScreen(
             Spacer(modifier = Modifier.height(16.dp))
             Spacer(modifier = Modifier.weight(1f))
             SaveButton(viewModel.canSave(money, title, category)) {
-                viewModel.add(money, title, category, description, time, selectedIndex == 0)
+                viewModel.add(money, title, category, description, time, isExpenses)
             }
         }
     }

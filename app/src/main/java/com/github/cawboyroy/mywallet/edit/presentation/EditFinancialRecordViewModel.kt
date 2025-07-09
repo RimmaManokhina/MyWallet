@@ -57,8 +57,8 @@ class EditFinancialRecordViewModel @Inject constructor(
         id: Long,
     ) = FinancialRecord(
         HandleMoney.finalize(money),
-        title,
-        category,
+        title.trim(),
+        category.trim(),
         description,
         time,
         isExpenses,

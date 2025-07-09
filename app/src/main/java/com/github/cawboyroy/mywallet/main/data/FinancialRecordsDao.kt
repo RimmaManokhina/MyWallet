@@ -9,6 +9,12 @@ import androidx.room.Insert
 @Dao
 interface FinancialRecordsDao {
 
+    @Query("SELECT * FROM financial_records WHERE isExpenses=:isExpenses AND title LIKE :searchQuery || '%'")
+    suspend fun financialRecordsStartingWith(
+        searchQuery: String,
+        isExpenses: Boolean
+    ): List<FinancialRecordEntity>
+
     @Query("DELETE FROM financial_records")
     suspend fun clearAll()
 

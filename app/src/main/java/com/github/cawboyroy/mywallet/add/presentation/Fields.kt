@@ -33,60 +33,6 @@ fun Title(@StringRes resourceId: Int) {
 }
 
 @Composable
-fun TitleField(value: String, onValueChanged: (String) -> Unit) {
-    Title(R.string.title)
-    BasicTextField(
-        cursorBrush = SolidColor(LocalContentColor.current),
-        textStyle = TextStyle(fontSize = 18.sp, color = LocalContentColor.current),
-        value = value,
-        onValueChange = onValueChanged,
-        modifier = Modifier
-            .height(48.dp)
-            .padding(horizontal = 16.dp)
-            .fillMaxWidth()
-            .border(1.dp, Color.Gray),
-        singleLine = true,
-        decorationBox = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                it()
-            }
-        }
-    )
-}
-
-@Composable
-fun CategoryField(value: String, onValueChanged: (String) -> Unit) {
-    Title(R.string.category)
-    BasicTextField(
-        cursorBrush = SolidColor(LocalContentColor.current),
-        textStyle = TextStyle(fontSize = 18.sp, color = LocalContentColor.current),
-        value = value,
-        onValueChange = onValueChanged,
-        modifier = Modifier
-            .height(48.dp)
-            .padding(horizontal = 16.dp)
-            .fillMaxWidth()
-            .border(1.dp, Color.Gray),
-        singleLine = true,
-        decorationBox = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                it()
-            }
-        }
-    )
-}
-
-@Composable
 fun DescriptionField(value: String, onValueChanged: (String) -> Unit) {
     Title(R.string.description)
     BasicTextField(
