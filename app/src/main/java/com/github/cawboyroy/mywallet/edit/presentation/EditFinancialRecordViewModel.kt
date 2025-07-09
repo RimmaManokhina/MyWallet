@@ -9,10 +9,13 @@ import com.github.cawboyroy.mywallet.add.presentation.Close
 import com.github.cawboyroy.mywallet.add.presentation.FinancialRecord
 import com.github.cawboyroy.mywallet.add.presentation.HandleMoney
 import com.github.cawboyroy.mywallet.core.RunAsync
-import com.github.cawboyroy.mywallet.main.data.EditRepository
+import com.github.cawboyroy.mywallet.edit.data.EditRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.Serializable
 import javax.inject.Inject
 
@@ -20,7 +23,7 @@ import javax.inject.Inject
 class EditFinancialRecordViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val runAsync: RunAsync,
-    private val repository: EditRepository,
+    private val repository: EditRepository
 ) : ViewModel() {
 
     private val closeState: MutableStateFlow<Close> = MutableStateFlow(Close.Empty)
@@ -30,13 +33,18 @@ class EditFinancialRecordViewModel @Inject constructor(
     val state: StateFlow<EditState> = savedStateHandle.getStateFlow("state", EditState.Empty)
 
     fun loadRecord(id: Long) {
-        runAsync.runAsync(
-            scope = viewModelScope,
-            background = { repository.record(id) }
-        ) {
-            savedStateHandle["state"] = EditState.Success(it)
+        viewModelScope.launch {
+            try {
+                val record = withContext(Dispatchers.IO) {
+                    repository.record(id)
+                }
+                savedStateHandle["state"] = EditState.Success(record)
+            } catch (e: Exception) {
+                e.message ?: "Unknown error"
+            }
         }
     }
+
 
     fun canSave(
         record: FinancialRecord,
@@ -72,7 +80,7 @@ class EditFinancialRecordViewModel @Inject constructor(
         title: String,
         category: String,
         time: Long,
-        description: String,
+        description: String
     ) {
         runAsync.runAsync(scope = viewModelScope, background = {
             repository.edit(
@@ -112,19 +120,19 @@ interface EditState : Serializable {
         override fun Show(
             id: Long,
             viewModel: EditFinancialRecordViewModel,
-            navController: NavController,
+            navController: NavController
         ) {
             viewModel.loadRecord(id)
         }
     }
 
-    data class Success(private val record: FinancialRecord) : EditState {
 
+    data class Success(private val record: FinancialRecord) : EditState {
         @Composable
         override fun Show(
             id: Long,
             viewModel: EditFinancialRecordViewModel,
-            navController: NavController,
+            navController: NavController
         ) {
             EditFinancialRecordInner(viewModel, record, navController)
         }

@@ -20,13 +20,13 @@ class ImportExportViewModel @Inject constructor(
     val state: StateFlow<ImportExportState> =
         savedStateHandle.getStateFlow(KEY, ImportExportState.Initial)
 
-    fun import(uri: Uri) {
-        savedStateHandle[KEY] = ImportExportState.ImportInProgress(uri)
+    fun import(uri: Uri, password: String) {
+        savedStateHandle[KEY] = ImportExportState.ImportInProgress(uri, password)
     }
 
-    fun importInternal(uri: Uri) {
+    fun importInternal(uri: Uri, password: String) {
         runAsync.runAsync(viewModelScope, {
-            if (repository.import(uri))
+            if (repository.import(password, uri))
                 ImportExportState.Imported
             else
                 ImportExportState.Failed
@@ -35,13 +35,13 @@ class ImportExportViewModel @Inject constructor(
         }
     }
 
-    fun export() {
-        savedStateHandle[KEY] = ImportExportState.ExportInProgress
+    fun export(password: String) {
+        savedStateHandle[KEY] = ImportExportState.ExportInProgress(password)
     }
 
-    fun exportInternal() {
+    fun exportInternal(password: String) {
         runAsync.runAsync(viewModelScope, {
-            repository.export()
+            repository.export(password)
         }) {
             savedStateHandle[KEY] = ImportExportState.Share(it)
         }

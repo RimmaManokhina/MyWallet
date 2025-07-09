@@ -16,23 +16,23 @@ import javax.inject.Inject
 
 interface ImportExportRepository {
 
-    suspend fun import(uri: Uri): Boolean
+    suspend fun import(password: String, uri: Uri): Boolean
 
-    suspend fun export(): String
+    suspend fun export(password: String): String
 
     class Base @Inject constructor(
         private val dao: FinancialRecordsDao,
         @ApplicationContext private val context: Context,
         private val encryption: Encryption,
-        ) : ImportExportRepository {
+    ) : ImportExportRepository {
 
         private val gson: Gson = Gson()
         private val type = object : TypeToken<List<FinancialRecordEntity>>() {}.type
         private val formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy-HH-mm")
 
-        override suspend fun import(uri: Uri): Boolean = try {
+        override suspend fun import(password: String, uri: Uri): Boolean = try {
             val encryptedFromOuterFile = context.contentResolver.openInputStream(uri)!!.readBytes()
-            val decrypted = encryption.decrypted(encryptedFromOuterFile)
+            val decrypted = encryption.decrypted(password, encryptedFromOuterFile)
             val transactions: List<FinancialRecordEntity> = gson.fromJson(decrypted, type)
             dao.clearAll()
             dao.addAll(transactions)
@@ -42,14 +42,14 @@ interface ImportExportRepository {
             false
         }
 
-        override suspend fun export(): String {
+        override suspend fun export(password: String): String {
             val currentDateTime = LocalDateTime.now()
             val formattedDateTime = currentDateTime.format(formatter)
             val transactions = dao.all()
             val json = gson.toJson(transactions)
             val appName = context.getString(R.string.app_name)
             val file = File(context.cacheDir, "$appName-backup-$formattedDateTime.json")
-            file.writeBytes(encryption.encrypted(json))
+            file.writeBytes(encryption.encrypted(password, json))
             val uri: Uri = FileProvider.getUriForFile(
                 context, "${context.packageName}.provider", file
             )
