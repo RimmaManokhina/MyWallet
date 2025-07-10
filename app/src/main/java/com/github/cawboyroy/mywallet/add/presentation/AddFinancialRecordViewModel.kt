@@ -29,7 +29,7 @@ class AddFinancialRecordViewModel @Inject constructor(
         category: String,
         description: String,
         time: Long,
-        isExpenses: Boolean,
+        isExpenses: Boolean
     ) {
         runAsync.runAsync(
             scope = viewModelScope,
@@ -53,7 +53,7 @@ class AddFinancialRecordViewModel @Inject constructor(
     fun canSave(
         money: String,
         title: String,
-        category: String,
+        category: String
     ) = money.isValid() && title.isNotEmpty() && category.isNotEmpty()
 }
 

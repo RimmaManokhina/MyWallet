@@ -42,9 +42,12 @@ android {
 }
 
 dependencies {
+    implementation(libs.gson)
+
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore.core)
-    implementation(libs.androidx.navigation.compose.v291)
+    implementation(libs.androidx.navigation.compose)
+
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
     androidTestImplementation(libs.androidx.room.testing)

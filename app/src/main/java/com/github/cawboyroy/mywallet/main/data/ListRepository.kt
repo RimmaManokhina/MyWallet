@@ -4,6 +4,7 @@ import com.github.cawboyroy.mywallet.add.presentation.FinancialRecord
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import com.github.cawboyroy.mywallet.main.presentation.MonthsUi
 
 interface ListRepository {
 
@@ -15,8 +16,6 @@ interface ListRepository {
 
         override fun list(isExpenses: Boolean, time: MonthsUi): Flow<List<FinancialRecord>> {
             val (min, max) = time.monthBoundaries()
-
-
             return dao.financialRecords(isExpenses, min, max).map { list ->
                 list.map {
                     FinancialRecord(

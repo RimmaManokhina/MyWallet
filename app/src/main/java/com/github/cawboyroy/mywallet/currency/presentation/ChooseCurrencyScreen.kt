@@ -43,6 +43,7 @@ fun ChooseCurrencyScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     var input by rememberSaveable { mutableStateOf("") }
     val list = viewModel.state.collectAsStateWithLifecycle().value
+
     val close = viewModel.close.collectAsStateWithLifecycle().value
     close.Show(navController)
 

@@ -45,19 +45,14 @@ fun AddFinancialRecordScreen(
                 Modifier.padding(horizontal = 16.dp),
                 selectedIndex
             ) { selectedIndex = it }
-
             var money by rememberSaveable { mutableStateOf(BigDecimal.ZERO.toString()) }
             MoneyField(false, money) { money = it }
-
             var title by rememberSaveable { mutableStateOf("") }
             TitleField(title) { title = it }
-
             var category by rememberSaveable { mutableStateOf("") }
             CategoryField(category) { category = it }
-
             var time by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
             ChooseTime(time) { time = it }
-
             var description by rememberSaveable { mutableStateOf("") }
             DescriptionField(description) { description = it }
             Spacer(modifier = Modifier.height(16.dp))

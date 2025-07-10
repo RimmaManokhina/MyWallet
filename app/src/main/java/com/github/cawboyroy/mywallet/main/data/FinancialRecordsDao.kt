@@ -4,15 +4,24 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
+import androidx.room.Insert
 
 @Dao
 interface FinancialRecordsDao {
+
+    @Query("DELETE FROM financial_records")
+    suspend fun clearAll()
+
+    @Insert
+    suspend fun addAll(list: List<FinancialRecordEntity>)
+
+    @Query("SELECT * FROM financial_records")
+    suspend fun all(): List<FinancialRecordEntity>
 
     @Upsert
     suspend fun add(financialRecordEntity: FinancialRecordEntity)
 
     @Query("SELECT * FROM financial_records WHERE isExpenses=:isExpenses AND time < :max AND time >= :min ORDER BY time ASC")
-
     fun financialRecords(
         isExpenses: Boolean,
         min: Long,

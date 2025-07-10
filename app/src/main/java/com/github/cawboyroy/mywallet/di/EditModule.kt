@@ -11,5 +11,5 @@ import dagger.hilt.components.SingletonComponent
 abstract class EditModule {
 
     @Binds
-    abstract fun binEditRepository(repository: EditRepository.Base): EditRepository
+    abstract fun bindEditRepository(repository: EditRepository.Base): EditRepository
 }

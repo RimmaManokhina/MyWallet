@@ -36,7 +36,7 @@ import com.github.cawboyroy.mywallet.R
 fun AnimatedIncomeExpenseToggle(
     modifier: Modifier = Modifier,
     selectedIndex: Int,
-    onTabSelected: (Int) -> Unit,
+    onTabSelected: (Int) -> Unit
 ) {
     val tabs = listOf(R.string.expenses, R.string.incomes)
 

@@ -22,8 +22,7 @@ interface AllCollapsedUi : Serializable {
 
     abstract class Abstract(
         @StringRes private val description: Int,
-
-        ) : AllCollapsedUi {
+    ) : AllCollapsedUi {
 
         protected abstract val icon: ImageVector
 

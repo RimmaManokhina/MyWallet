@@ -23,7 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.clickable
 
 @Composable
 fun FinancialRecordInListUi(
@@ -78,7 +77,7 @@ fun FinancialRecordInListUi(
             )
 
             Text(
-                text = money.toString(),//todo format later
+                text = money.toString(),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 color = Color(if (isExpenses) 0xFFFF0000 else 0xFF008000),
@@ -98,7 +97,5 @@ fun PreviewExpenseUi() {
         money = "18990",
         title = "pizza",
         category = "food"
-    ) {
-    }
+    ) {}
 }
-

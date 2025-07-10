@@ -60,7 +60,6 @@ fun EditFinancialRecordInner(
                 .verticalScroll(scrollState)
         ) {
             Spacer(modifier = Modifier.height(32.dp))
-
             var selectedIndex by rememberSaveable { mutableIntStateOf(if (record.isExpenses) 0 else 1) }
             AnimatedIncomeExpenseToggle(
                 Modifier.padding(horizontal = 16.dp),
@@ -68,16 +67,12 @@ fun EditFinancialRecordInner(
             ) { selectedIndex = it }
             var money by rememberSaveable { mutableStateOf(record.money) }
             MoneyField(true, money) { money = it }
-
             var title by rememberSaveable { mutableStateOf(record.title) }
             TitleField(title) { title = it }
-
             var category by rememberSaveable { mutableStateOf(record.category) }
             CategoryField(category) { category = it }
-
             var time by rememberSaveable { mutableLongStateOf(record.time) }
             ChooseTime(time) { time = it }
-
             var description by rememberSaveable { mutableStateOf(record.description) }
             DescriptionField(description) { description = it }
             Spacer(modifier = Modifier.height(16.dp))
