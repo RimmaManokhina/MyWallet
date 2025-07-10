@@ -11,11 +11,8 @@ import com.github.cawboyroy.mywallet.add.presentation.HandleMoney
 import com.github.cawboyroy.mywallet.core.RunAsync
 import com.github.cawboyroy.mywallet.edit.data.EditRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.Serializable
 import javax.inject.Inject
 
@@ -33,18 +30,13 @@ class EditFinancialRecordViewModel @Inject constructor(
     val state: StateFlow<EditState> = savedStateHandle.getStateFlow("state", EditState.Empty)
 
     fun loadRecord(id: Long) {
-        viewModelScope.launch {
-            try {
-                val record = withContext(Dispatchers.IO) {
-                    repository.record(id)
-                }
-                savedStateHandle["state"] = EditState.Success(record)
-            } catch (e: Exception) {
-                e.message ?: "Unknown error"
-            }
+        runAsync.runAsync(
+            scope = viewModelScope,
+            background = { repository.record(id) }
+        ) {
+            savedStateHandle["state"] = EditState.Success(it)
         }
     }
-
 
     fun canSave(
         record: FinancialRecord,
@@ -57,8 +49,8 @@ class EditFinancialRecordViewModel @Inject constructor(
         id: Long,
     ) = FinancialRecord(
         HandleMoney.finalize(money),
-        title.trim(),
-        category.trim(),
+        title,
+        category,
         description,
         time,
         isExpenses,
@@ -126,8 +118,8 @@ interface EditState : Serializable {
         }
     }
 
-
     data class Success(private val record: FinancialRecord) : EditState {
+
         @Composable
         override fun Show(
             id: Long,

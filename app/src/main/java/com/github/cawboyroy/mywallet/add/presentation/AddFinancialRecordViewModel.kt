@@ -7,11 +7,13 @@ import androidx.navigation.NavController
 import com.github.cawboyroy.mywallet.add.data.AddRepository
 import com.github.cawboyroy.mywallet.core.RunAsync
 import com.github.cawboyroy.mywallet.edit.presentation.isValid
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.io.Serializable
 import javax.inject.Inject
 
+@HiltViewModel
 class AddFinancialRecordViewModel @Inject constructor(
     private val runAsync: RunAsync,
     private val addRepository: AddRepository,
@@ -27,7 +29,7 @@ class AddFinancialRecordViewModel @Inject constructor(
         category: String,
         description: String,
         time: Long,
-        isExpenses: Boolean,
+        isExpenses: Boolean
     ) {
         runAsync.runAsync(
             scope = viewModelScope,
@@ -35,9 +37,9 @@ class AddFinancialRecordViewModel @Inject constructor(
                 addRepository.add(
                     FinancialRecord(
                         HandleMoney.finalize(money),
-                        title.trim(),
-                        category.trim(),
-                        description.trim(),
+                        title,
+                        category,
+                        description,
                         time,
                         isExpenses
                     )
@@ -51,8 +53,8 @@ class AddFinancialRecordViewModel @Inject constructor(
     fun canSave(
         money: String,
         title: String,
-        category: String,
-    ) = money.isValid() && title.trim().isNotEmpty() && category.trim().isNotEmpty()
+        category: String
+    ) = money.isValid() && title.isNotEmpty() && category.isNotEmpty()
 }
 
 data class FinancialRecord(

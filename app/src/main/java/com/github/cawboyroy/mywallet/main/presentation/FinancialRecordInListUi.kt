@@ -1,6 +1,5 @@
 package com.github.cawboyroy.mywallet.main.presentation
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,25 +10,22 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun FinancialRecordInListUi(
-    @DrawableRes categoryId: Int,
     id: Long,
     isExpenses: Boolean,
     money: String,
@@ -39,7 +35,6 @@ fun FinancialRecordInListUi(
 ) {
     Card(
         modifier = Modifier
-            .padding(8.dp)
             .fillMaxWidth()
             .padding(vertical = 4.dp, horizontal = 8.dp)
             .clickable(enabled = true, onClick = { onClick.invoke(id) }),
@@ -54,13 +49,6 @@ fun FinancialRecordInListUi(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Icon(
-                painter = painterResource(categoryId),
-                contentDescription = category,
-                modifier = Modifier.size(36.dp),
-                tint = MaterialTheme.colorScheme.primary
-            )
-            Spacer(modifier = Modifier.width(4.dp))
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -89,7 +77,7 @@ fun FinancialRecordInListUi(
             )
 
             Text(
-                text = money,
+                text = money.toString(),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 color = Color(if (isExpenses) 0xFFFF0000 else 0xFF008000),
@@ -98,4 +86,16 @@ fun FinancialRecordInListUi(
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewExpenseUi() {
+    FinancialRecordInListUi(
+        id = 123L,
+        isExpenses = true,
+        money = "18990",
+        title = "pizza",
+        category = "food"
+    ) {}
 }

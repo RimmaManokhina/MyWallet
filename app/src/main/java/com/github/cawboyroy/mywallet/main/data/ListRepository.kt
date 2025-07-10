@@ -16,8 +16,6 @@ interface ListRepository {
 
         override fun list(isExpenses: Boolean, time: MonthsUi): Flow<List<FinancialRecord>> {
             val (min, max) = time.monthBoundaries()
-
-
             return dao.financialRecords(isExpenses, min, max).map { list ->
                 list.map {
                     FinancialRecord(

@@ -13,7 +13,6 @@ import java.util.Currency
 import java.util.Locale
 import javax.inject.Inject
 
-
 @HiltViewModel
 class ChooseCurrencyViewModel @Inject constructor(
     private val runAsync: RunAsync,

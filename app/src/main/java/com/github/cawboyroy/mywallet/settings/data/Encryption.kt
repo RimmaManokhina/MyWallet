@@ -17,9 +17,7 @@ interface Encryption {
 
     class Base @Inject constructor() : Encryption {
 
-
         override suspend fun encrypted(password: String, notEncryptedSource: String): ByteArray {
-
             val salt = ByteArray(16).also { SecureRandom().nextBytes(it) }
             val iv = ByteArray(12).also { SecureRandom().nextBytes(it) }
             val key = deriveKeyFromPassword(password, salt)

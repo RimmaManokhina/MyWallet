@@ -19,12 +19,11 @@ interface ChosenCurrencyRepository {
 
     @Singleton
     class Base @Inject constructor(
-        @ApplicationContext private val context: Context,
+        @ApplicationContext private val context: Context
     ) : ChosenCurrencyRepository {
 
         private val Context.dataStore by preferencesDataStore(name = context.getString(R.string.app_name))
         private val preferencesKey = stringPreferencesKey("currency")
-
 
         override fun value(): Flow<String> {
             return context.dataStore.data.map { preferences ->

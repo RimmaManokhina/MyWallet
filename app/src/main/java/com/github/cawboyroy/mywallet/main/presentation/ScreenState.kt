@@ -7,7 +7,7 @@ data class ScreenState(
     val allCollapsed: AllCollapsedUi,
     val isExpenses: Boolean,
     val time: MonthsUi,
-    val collapsedIds: CollapsedIds,
+    val collapsedIds: CollapsedIds
 ) : Serializable {
 
     fun separatedList(currency: String, records: List<FinancialRecord>) =

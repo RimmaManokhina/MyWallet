@@ -60,8 +60,6 @@ object HandleMoney {
 
     private fun filterOnlyDigits(source: String): String {
         return source.filter { it.isDigit() }
-
-
     }
 
     fun formatWhole(currency: String, source: String): String {

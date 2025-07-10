@@ -38,9 +38,9 @@ fun MoneyField(edit: Boolean, value: String, onValueChanged: (String) -> Unit) {
     val viewModel = hiltViewModel<ChooseCurrencyViewModel>()
     Title(R.string.money)
     val ui: String = HandleMoney.ui(raw = value)
+
     val firstText by remember { mutableStateOf(value) }
     val currency = viewModel.chosenCurrency().collectAsStateWithLifecycle("").value
-
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -67,7 +67,6 @@ fun MoneyField(edit: Boolean, value: String, onValueChanged: (String) -> Unit) {
             onValueChange = {
                 val new: String = it.text
                 onValueChanged(HandleMoney.value(ui = new))
-
             },
             modifier = Modifier
                 .weight(1f)

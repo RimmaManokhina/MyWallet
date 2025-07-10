@@ -20,5 +20,5 @@ data class FinancialRecordEntity(
     @ColumnInfo("time")
     val time: Long,
     @ColumnInfo("isExpenses")
-    val isExpenses: Boolean,
+    val isExpenses: Boolean
 )

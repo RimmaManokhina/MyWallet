@@ -41,7 +41,7 @@ fun ImportExportScreen() {
                 .padding(paddingValues)
         ) {
             state.Show(activity, launcher, viewModel, userInput) {
-                userInput= activity.applicationContext.toString().trim()
+                userInput = it.trim()
             }
         }
     }

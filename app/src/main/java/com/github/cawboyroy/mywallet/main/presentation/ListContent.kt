@@ -59,6 +59,7 @@ fun ListContent(paddingValues: PaddingValues, onRecordClick: (Long) -> Unit) {
                 )
             }
         }
+
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {

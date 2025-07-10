@@ -1,16 +1,11 @@
 package com.github.cawboyroy.mywallet.main.presentation
 
-import android.content.Context
-import androidx.annotation.DrawableRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import com.github.cawboyroy.mywallet.R
 import com.github.cawboyroy.mywallet.add.presentation.HandleMoney
-import com.github.cawboyroy.mywallet.add.presentation.expensesCategoryList
-import com.github.cawboyroy.mywallet.add.presentation.incomeCategoryList
 import java.math.BigDecimal
 
 interface FinancialRecordUi {
@@ -77,9 +72,7 @@ interface FinancialRecordUi {
 
         @Composable
         override fun Show(actions: RecordActions, onClick: (Long) -> Unit) {
-            val context = LocalContext.current
             FinancialRecordInListUi(
-                categoryId = context.categoryResId(category, isExpenses),
                 id = id,
                 isExpenses = isExpenses,
                 money = HandleMoney.formatWhole(currency, money),
@@ -92,15 +85,6 @@ interface FinancialRecordUi {
         override fun id() = id.toString()
 
         override fun sum(): BigDecimal = BigDecimal.ZERO
-
-        @DrawableRes
-        fun Context.categoryResId(category: String, isExpenses: Boolean): Int {
-            val list = if (isExpenses) expensesCategoryList else incomeCategoryList
-            return (list.find {
-                getString(it.titleResId).equals(category, ignoreCase = true)
-            } ?: list.last()).iconResId
-        }
-
     }
 }
 

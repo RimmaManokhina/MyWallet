@@ -45,29 +45,20 @@ fun AddFinancialRecordScreen(
                 Modifier.padding(horizontal = 16.dp),
                 selectedIndex
             ) { selectedIndex = it }
-
             var money by rememberSaveable { mutableStateOf(BigDecimal.ZERO.toString()) }
             MoneyField(false, money) { money = it }
-
             var title by rememberSaveable { mutableStateOf("") }
-
+            TitleField(title) { title = it }
             var category by rememberSaveable { mutableStateOf("") }
-
-            val onCategoryChange: (String) -> Unit = { category = it }
-
-            val isExpenses: Boolean = selectedIndex == 0
-            TitleField(title, isExpenses, onCategoryChange) { title = it }
-            CategoryField(category, isExpenses, onCategoryChange)
-
+            CategoryField(category) { category = it }
             var time by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
             ChooseTime(time) { time = it }
-
             var description by rememberSaveable { mutableStateOf("") }
             DescriptionField(description) { description = it }
             Spacer(modifier = Modifier.height(16.dp))
             Spacer(modifier = Modifier.weight(1f))
             SaveButton(viewModel.canSave(money, title, category)) {
-                viewModel.add(money, title, category, description, time, isExpenses)
+                viewModel.add(money, title, category, description, time, selectedIndex == 0)
             }
         }
     }
