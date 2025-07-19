@@ -56,4 +56,5 @@
     <string name="category_commissions">Commissions</string>
     <string name="category_tips">Tips</string>
     <string name="category_other_income">Other income</string>
+    <string name="no_data">No data</string>
 </resources>

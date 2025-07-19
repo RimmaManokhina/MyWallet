@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun DayUi(
+    modifier: Modifier,
     @StringRes description: Int,
     icon: ImageVector,
     date: String,
@@ -24,7 +25,7 @@ fun DayUi(
 ) {
     Row(
         verticalAlignment = Alignment.Companion.CenterVertically,
-        modifier = Modifier.Companion
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp, horizontal = 8.dp)
     ) {

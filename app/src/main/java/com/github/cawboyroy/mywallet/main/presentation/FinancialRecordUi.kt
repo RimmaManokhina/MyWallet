@@ -1,17 +1,24 @@
 package com.github.cawboyroy.mywallet.main.presentation
 
+import android.content.Context
+import androidx.annotation.DrawableRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.github.cawboyroy.mywallet.R
+import com.github.cawboyroy.mywallet.add.presentation.CategoryIcon
 import com.github.cawboyroy.mywallet.add.presentation.HandleMoney
+import com.github.cawboyroy.mywallet.add.presentation.expensesCategoryList
+import com.github.cawboyroy.mywallet.add.presentation.incomeCategoryList
 import java.math.BigDecimal
 
 interface FinancialRecordUi {
 
     @Composable
-    fun Show(actions: RecordActions, onClick: (Long) -> Unit)
+    fun Show(modifier: Modifier, actions: RecordActions, onClick: (Long) -> Unit)
 
     fun id(): String
 
@@ -25,14 +32,16 @@ interface FinancialRecordUi {
     ) : FinancialRecordUi {
 
         @Composable
-        override fun Show(actions: RecordActions, onClick: (Long) -> Unit) = DayUi(
-            R.string.expand,
-            Icons.Filled.KeyboardArrowDown,
-            date,
-            HandleMoney.formatWhole(currency, sum.toString())
-        ) {
-            actions.expand(day)
-        }
+        override fun Show(modifier: Modifier, actions: RecordActions, onClick: (Long) -> Unit) =
+            DayUi(
+                modifier,
+                R.string.expand,
+                Icons.Filled.KeyboardArrowDown,
+                date,
+                HandleMoney.formatWhole(currency, sum.toString())
+            ) {
+                actions.expand(day)
+            }
 
         override fun sum() = sum
 
@@ -47,14 +56,16 @@ interface FinancialRecordUi {
     ) : FinancialRecordUi {
 
         @Composable
-        override fun Show(actions: RecordActions, onClick: (Long) -> Unit) = DayUi(
-            R.string.collapse,
-            Icons.Filled.KeyboardArrowUp,
-            date,
-            HandleMoney.formatWhole(currency, sum.toString())
-        ) {
-            actions.collapse(day)
-        }
+        override fun Show(modifier: Modifier, actions: RecordActions, onClick: (Long) -> Unit) =
+            DayUi(
+                modifier,
+                R.string.collapse,
+                Icons.Filled.KeyboardArrowUp,
+                date,
+                HandleMoney.formatWhole(currency, sum.toString())
+            ) {
+                actions.collapse(day)
+            }
 
         override fun sum() = sum
 
@@ -71,8 +82,11 @@ interface FinancialRecordUi {
     ) : FinancialRecordUi {
 
         @Composable
-        override fun Show(actions: RecordActions, onClick: (Long) -> Unit) {
+        override fun Show(modifier: Modifier, actions: RecordActions, onClick: (Long) -> Unit) {
+            val context = LocalContext.current
             FinancialRecordInListUi(
+                modifier,
+                categoryId = context.categoryResId(category, isExpenses),
                 id = id,
                 isExpenses = isExpenses,
                 money = HandleMoney.formatWhole(currency, money),
@@ -86,6 +100,17 @@ interface FinancialRecordUi {
 
         override fun sum(): BigDecimal = BigDecimal.ZERO
     }
+}
+
+@DrawableRes
+fun Context.categoryResId(category: String, isExpenses: Boolean) =
+    findCategory(category, isExpenses).iconResId
+
+fun Context.findCategory(category: String, isExpenses: Boolean): CategoryIcon {
+    val list = if (isExpenses) expensesCategoryList else incomeCategoryList
+    return (list.find {
+        getString(it.titleResId).equals(category, ignoreCase = true)
+    } ?: list.last())
 }
 
 interface RecordActions {
