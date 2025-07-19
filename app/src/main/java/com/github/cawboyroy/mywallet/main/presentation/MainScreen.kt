@@ -17,11 +17,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.github.cawboyroy.mywallet.R
+import com.github.cawboyroy.mywallet.chart.presentation.ChartScreen
 import com.github.cawboyroy.mywallet.settings.presentation.SettingsScreen
 
 @Composable
@@ -36,6 +39,7 @@ fun MainScreen(outerNavController: NavController) {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(BottomNavItem.Home.route) { HomeScreen(outerNavController) }
+            composable(BottomNavItem.Chart.route) { ChartScreen(outerNavController) }
             composable(BottomNavItem.Settings.route) { SettingsScreen(outerNavController) }
         }
     }
@@ -45,6 +49,7 @@ fun MainScreen(outerNavController: NavController) {
 fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
         BottomNavItem.Home,
+        BottomNavItem.Chart,
         BottomNavItem.Settings
     )
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -75,14 +80,24 @@ fun BottomNavigationBar(navController: NavController) {
                     }
                 },
                 label = { Text(item.label) },
-                icon = { Icon(item.icon, contentDescription = item.label) }
+                icon = { item.IconUi() }
             )
         }
     }
 }
 
 sealed class BottomNavItem(val route: String, val icon: ImageVector, val label: String) {
+    @Composable
+    open fun IconUi() = Icon(icon, contentDescription = label)
+
     object Home : BottomNavItem("home", Icons.Filled.Home, "Home")
+    object Chart : BottomNavItem("chart", Icons.Filled.Home, "Chart") {
+
+        @Composable
+        override fun IconUi() =
+            Icon(painter = painterResource(R.drawable.ic_chart), contentDescription = label)
+    }
+
     object Settings : BottomNavItem(
         "settings",
         Icons.Filled.Settings, "Settings"

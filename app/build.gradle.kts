@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.kotlinx.collections.immutable)
     implementation(libs.gson)
 
     implementation(libs.androidx.datastore.preferences)

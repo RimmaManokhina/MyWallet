@@ -4,6 +4,7 @@ import android.icu.util.Calendar
 import android.icu.util.TimeZone
 import com.github.cawboyroy.mywallet.add.presentation.FinancialRecord
 import com.github.cawboyroy.mywallet.add.presentation.HandleMoney
+import com.github.cawboyroy.mywallet.chart.presentation.FinancialRecordChartUi
 import java.io.Serializable
 import java.time.Instant
 import java.time.Month
@@ -11,13 +12,26 @@ import java.time.ZoneId
 import java.time.format.TextStyle
 import java.util.Locale
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 data class MonthsUi(private val now: Long) : Serializable {
 
     private val timeZone: TimeZone = TimeZone.getDefault()
 
+    fun monthNameAndSumForChart(
+        data: List<FinancialRecord>,
+        currency: String
+    ): MonthAndTotal {
+        val list: List<BigDecimal> = data.map { BigDecimal(it.money) }
+        return total(list, currency)
+    }
+
     fun monthNameAndSum(data: List<FinancialRecordUi>, currency: String): MonthAndTotal {
         val list: List<BigDecimal> = data.map { it.sum() }
+        return total(list, currency)
+    }
+
+    private fun total(list: List<BigDecimal>, currency: String): MonthAndTotal {
         val instant = Instant.ofEpochMilli(now)
         val zonedDateTime = instant.atZone(ZoneId.systemDefault())
         val month: Month = zonedDateTime.month
@@ -143,6 +157,48 @@ data class MonthsUi(private val now: Long) : Serializable {
 
         return list.reversed()
     }
+
+    fun makeCharts(currency: String, records: List<FinancialRecord>): List<FinancialRecordChartUi> {
+        return makeChartsInner(currency, records) { true }
+    }
+
+    fun makeCharts(
+        currency: String,
+        records: List<FinancialRecord>,
+        expandedCategory: String
+    ): List<FinancialRecordChartUi> {
+        return makeChartsInner(currency, records) { it != expandedCategory }
+    }
+
+    private fun makeChartsInner(
+        currency: String,
+        records: List<FinancialRecord>,
+        collapsed: (String) -> Boolean
+    ): List<FinancialRecordChartUi> {
+        if (records.isEmpty())
+            return emptyList()
+        val result = mutableListOf<FinancialRecordChartUi>()
+        val grouped = records.groupBy { it.category }
+        val total = records.sumOf { BigDecimal(it.money) }
+        grouped.forEach { category, records ->
+            val sumOfCategory: BigDecimal = records.sumOf { BigDecimal(it.money) }
+            val percentage: Float =
+                sumOfCategory.multiply(BigDecimal(100)).divide(total, 2, RoundingMode.HALF_UP)
+                    .toFloat()
+            result.add(
+                FinancialRecordChartUi.CategoryHeader(
+                    collapsed(category),
+                    currency,
+                    category,
+                    sumOfCategory.toString(),
+                    records.first().isExpenses,
+                    percentage
+                )
+            )
+        }
+        return result
+    }
+
 
     private fun dayOfMonth(time: Long): Pair<String, Int> {
         val instant = Instant.ofEpochMilli(time)
