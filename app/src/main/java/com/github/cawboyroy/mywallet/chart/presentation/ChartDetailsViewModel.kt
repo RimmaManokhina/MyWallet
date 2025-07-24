@@ -14,8 +14,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
-import kotlin.collections.sortedByDescending
-import kotlin.collections.sortedWith
 
 @HiltViewModel
 class ChartDetailsViewModel @Inject constructor(
