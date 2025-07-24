@@ -45,7 +45,8 @@ class ListViewModel @Inject constructor(
             flow = screenStateFlow.combine(chosenCurrency()) { screenState, currency ->
                 Pair(screenState, currency)
             }.flatMapLatest { (screenState, currency) ->
-                repository.list(screenState.isExpenses, screenState.time)
+                val (min, max) = screenState.time.monthBoundaries()
+                repository.list(screenState.isExpenses, min, max)
                     .map { records -> screenState.separatedList(currency, records) }
             }
         ) {

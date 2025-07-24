@@ -24,6 +24,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.github.cawboyroy.mywallet.R
+import com.github.cawboyroy.mywallet.bars.BarsScreen
 import com.github.cawboyroy.mywallet.chart.presentation.ChartScreen
 import com.github.cawboyroy.mywallet.settings.presentation.SettingsScreen
 
@@ -40,6 +41,7 @@ fun MainScreen(outerNavController: NavController) {
         ) {
             composable(BottomNavItem.Home.route) { HomeScreen(outerNavController) }
             composable(BottomNavItem.Chart.route) { ChartScreen(outerNavController) }
+            composable(BottomNavItem.Bars.route) { BarsScreen() }
             composable(BottomNavItem.Settings.route) { SettingsScreen(outerNavController) }
         }
     }
@@ -50,6 +52,7 @@ fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
         BottomNavItem.Home,
         BottomNavItem.Chart,
+        BottomNavItem.Bars,
         BottomNavItem.Settings
     )
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -90,7 +93,15 @@ sealed class BottomNavItem(val route: String, val icon: ImageVector, val label: 
     @Composable
     open fun IconUi() = Icon(icon, contentDescription = label)
 
+    object Bars : BottomNavItem("bars", Icons.Filled.Home, "Bars") {
+
+        @Composable
+        override fun IconUi() =
+            Icon(painter = painterResource(R.drawable.ic_bars), contentDescription = label)
+    }
+
     object Home : BottomNavItem("home", Icons.Filled.Home, "Home")
+
     object Chart : BottomNavItem("chart", Icons.Filled.Home, "Chart") {
 
         @Composable

@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -50,7 +49,8 @@ class ChartsViewModel @Inject constructor(
             flow = screenStateFlow.combine(chosenCurrency()) { screenState, currency ->
                 Pair(screenState, currency)
             }.flatMapLatest { (screenState, currency) ->
-                repository.list(screenState.isExpenses, screenState.time)
+                val (min, max) = screenState.time.monthBoundaries()
+                repository.list(screenState.isExpenses, min, max)
             }.map { it.toPersistentList() }
         ) {
             recordsMutableStateFlow.value = it
