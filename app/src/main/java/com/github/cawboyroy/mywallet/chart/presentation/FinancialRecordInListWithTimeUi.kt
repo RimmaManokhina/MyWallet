@@ -22,13 +22,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.github.cawboyroy.mywallet.main.presentation.drawableResId
 
 @Composable
 fun FinancialRecordInListWithTimeUi(
+    index: Int,
     modifier: Modifier,
     @DrawableRes categoryId: Int,
     id: Long,
@@ -58,7 +62,12 @@ fun FinancialRecordInListWithTimeUi(
             Icon(
                 painter = painterResource(categoryId),
                 contentDescription = category,
-                modifier = Modifier.size(36.dp),
+                modifier = Modifier
+                    .size(36.dp)
+                    .testTag("ChartRecordIcon at $index")
+                    .semantics {
+                        this.drawableResId = categoryId
+                    },
                 tint = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.width(4.dp))
@@ -69,6 +78,7 @@ fun FinancialRecordInListWithTimeUi(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
+                    modifier = Modifier.testTag("ChartRecordTitle at $index"),
                     text = title,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
@@ -76,6 +86,7 @@ fun FinancialRecordInListWithTimeUi(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
+                    modifier = Modifier.testTag("ChartRecordCategory at $index"),
                     text = category,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
@@ -102,7 +113,9 @@ fun FinancialRecordInListWithTimeUi(
                 fontWeight = FontWeight.SemiBold,
                 color = Color(if (isExpenses) 0xFFFF0000 else 0xFF008000),
                 textAlign = TextAlign.End,
-                modifier = Modifier.align(Alignment.CenterVertically)
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .testTag("ChartRecordMoney at $index"),
             )
         }
     }

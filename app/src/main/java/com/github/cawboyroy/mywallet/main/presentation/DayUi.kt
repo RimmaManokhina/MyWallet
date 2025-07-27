@@ -13,9 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.testTag
 
 @Composable
 fun DayUi(
+    index: Int,
     modifier: Modifier,
     @StringRes description: Int,
     icon: ImageVector,
@@ -29,8 +31,16 @@ fun DayUi(
             .fillMaxWidth()
             .padding(vertical = 4.dp, horizontal = 8.dp)
     ) {
-        Text(text = date, modifier = Modifier.Companion.weight(1f))
-        Text(text = sum, modifier = Modifier.Companion.padding(horizontal = 4.dp))
+        Text(text = date, modifier = Modifier.Companion
+            .weight(1f)
+            .testTag("DayUiDate at $index"))
+        Text(
+            text = sum, modifier = Modifier
+                .testTag("DayUiSum at $index")
+                .padding(horizontal = 4.dp)
+                .testTag("DaySum")
+        )
+
         Button(onClick = onClick) {
             Icon(
                 icon,

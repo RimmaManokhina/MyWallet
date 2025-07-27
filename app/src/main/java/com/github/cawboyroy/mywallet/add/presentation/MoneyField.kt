@@ -2,6 +2,7 @@ package com.github.cawboyroy.mywallet.add.presentation
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.platform.testTag
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -53,7 +54,9 @@ fun MoneyField(edit: Boolean, value: String, onValueChanged: (String) -> Unit) {
                 textAlign = TextAlign.End,
                 color = LocalContentColor.current
             ),
-            modifier = Modifier.padding(horizontal = 4.dp)
+            modifier = Modifier
+                .padding(horizontal = 4.dp)
+                .testTag("CurrencyBeforeMoneyInput")
         )
         BasicTextField(
             cursorBrush = SolidColor(LocalContentColor.current),
@@ -69,6 +72,7 @@ fun MoneyField(edit: Boolean, value: String, onValueChanged: (String) -> Unit) {
                 onValueChanged(HandleMoney.value(ui = new))
             },
             modifier = Modifier
+                .testTag("MoneyInputField")
                 .weight(1f)
                 .height(48.dp)
                 .border(1.dp, Color.Gray),
