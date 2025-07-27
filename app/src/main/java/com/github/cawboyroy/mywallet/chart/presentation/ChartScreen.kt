@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -27,6 +27,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -117,7 +118,9 @@ fun ChartScreen(navController: NavController) {
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    modifier = Modifier.padding(all = 4.dp),
+                    modifier = Modifier
+                        .padding(all = 4.dp)
+                        .testTag("ChartScreenMonthTotal"),
                     text = monthAndTotal.total,
                     style = TextStyle(
                         fontSize = 18.sp,
@@ -143,9 +146,11 @@ fun ChartScreen(navController: NavController) {
                         categoryDetails.value = it.category()
                     }
                 }
-
-                items(items = detailsList, key = { item -> item.toString() }) { listItem ->
+                itemsIndexed(
+                    items = detailsList,
+                    key = { index, item -> item.toString() }) { index, listItem ->
                     listItem.Show(
+                        index,
                         Modifier.animateItem(),
                         onRecordClick
                     ) { (clickedCategory, collapsed) ->

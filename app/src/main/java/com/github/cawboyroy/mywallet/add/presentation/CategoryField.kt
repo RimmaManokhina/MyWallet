@@ -1,6 +1,8 @@
 package com.github.cawboyroy.mywallet.add.presentation
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.ui.platform.testTag
 import androidx.annotation.StringRes
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -56,7 +58,8 @@ fun CategoryField(value: String, isExpenses: Boolean, onValueChanged: (String) -
         onValueChange = {
             onValueChanged.invoke(it.text)
         },
-        modifier = Modifier.Companion
+        modifier = Modifier
+            .testTag("RecordCategoryInputField")
             .onFocusChanged {
                 hasFocus = it.hasFocus
             }
@@ -249,14 +252,15 @@ fun HorizontallyScrollableTwoRowIconGridWithTitles(
         contentPadding = PaddingValues(horizontal = itemPadding / 2),
         horizontalArrangement = Arrangement.spacedBy(itemPadding / 2)
     ) {
-        items(
+        itemsIndexed(
             items = iconPairs,
-            key = { pair -> pair.first().id }
-        ) { iconPair ->
+            key = { index, pair -> pair.first().id }
+        ) { index, iconPair ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 SingleIconWithTitleView(
+                    index = index + 1,
                     iconData = iconPair[0],
                     onIconClick = onIconClick,
                     iconSize = iconSize,
@@ -267,6 +271,7 @@ fun HorizontallyScrollableTwoRowIconGridWithTitles(
 
                 if (iconPair.size > 1)
                     SingleIconWithTitleView(
+                        index = index,
                         iconData = iconPair[1],
                         onIconClick = onIconClick,
                         iconSize = iconSize,
@@ -285,6 +290,7 @@ fun HorizontallyScrollableTwoRowIconGridWithTitles(
 
 @Composable
 private fun SingleIconWithTitleView(
+    index: Int,
     iconData: CategoryIcon,
     onIconClick: (CategoryIcon) -> Unit,
     iconSize: Dp,
@@ -292,6 +298,7 @@ private fun SingleIconWithTitleView(
 ) {
     Column(
         modifier = Modifier
+            .testTag("Suggestion at $index")
             .width(MAX_ITEM_SIZE)
             .height(MAX_ITEM_SIZE)
             .clickable { onIconClick(iconData) }

@@ -18,7 +18,7 @@ import java.math.BigDecimal
 interface FinancialRecordUi {
 
     @Composable
-    fun Show(modifier: Modifier, actions: RecordActions, onClick: (Long) -> Unit)
+    fun Show(index: Int, modifier: Modifier, actions: RecordActions, onClick: (Long) -> Unit)
 
     fun id(): String
 
@@ -32,8 +32,14 @@ interface FinancialRecordUi {
     ) : FinancialRecordUi {
 
         @Composable
-        override fun Show(modifier: Modifier, actions: RecordActions, onClick: (Long) -> Unit) =
+        override fun Show(
+            index: Int,
+            modifier: Modifier,
+            actions: RecordActions,
+            onClick: (Long) -> Unit
+        ) =
             DayUi(
+                index,
                 modifier,
                 R.string.expand,
                 Icons.Filled.KeyboardArrowDown,
@@ -56,8 +62,14 @@ interface FinancialRecordUi {
     ) : FinancialRecordUi {
 
         @Composable
-        override fun Show(modifier: Modifier, actions: RecordActions, onClick: (Long) -> Unit) =
+        override fun Show(
+            index: Int,
+            modifier: Modifier,
+            actions: RecordActions,
+            onClick: (Long) -> Unit
+        ) =
             DayUi(
+                index,
                 modifier,
                 R.string.collapse,
                 Icons.Filled.KeyboardArrowUp,
@@ -74,17 +86,23 @@ interface FinancialRecordUi {
 
     data class Base(
         private val currency: String,
-        val isExpenses: Boolean,
-        val money: String,
+        private val isExpenses: Boolean,
+        private val money: String,
         private val title: String,
         private val category: String,
         private val id: Long,
     ) : FinancialRecordUi {
 
         @Composable
-        override fun Show(modifier: Modifier, actions: RecordActions, onClick: (Long) -> Unit) {
+        override fun Show(
+            index: Int,
+            modifier: Modifier,
+            actions: RecordActions,
+            onClick: (Long) -> Unit
+        ) {
             val context = LocalContext.current
             FinancialRecordInListUi(
+                index,
                 modifier,
                 categoryId = context.categoryResId(category, isExpenses),
                 id = id,

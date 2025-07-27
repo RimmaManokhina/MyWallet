@@ -9,12 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.github.cawboyroy.mywallet.R
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 
 @Composable
 fun HomeScreen(navController: NavController) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
+                modifier = Modifier.testTag("HomeAddButton"),
                 onClick = { navController.navigate("add") }
             ) {
                 Icon(

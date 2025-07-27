@@ -27,6 +27,7 @@ import com.github.cawboyroy.mywallet.R
 import com.github.cawboyroy.mywallet.bars.BarsScreen
 import com.github.cawboyroy.mywallet.chart.presentation.ChartScreen
 import com.github.cawboyroy.mywallet.settings.presentation.SettingsScreen
+import androidx.compose.ui.platform.testTag
 
 @Composable
 fun MainScreen(outerNavController: NavController) {
@@ -69,6 +70,7 @@ fun BottomNavigationBar(navController: NavController) {
     NavigationBar {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
+                modifier = Modifier.testTag("MainScreenBottomItem ${item.route}"),
                 selected = selectedItemIndex == index,
                 onClick = {
                     if (selectedItemIndex != index) {

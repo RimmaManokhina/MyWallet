@@ -1,6 +1,7 @@
 package com.github.cawboyroy.mywallet.currency.presentation
 
 import androidx.compose.foundation.border
+import androidx.compose.ui.platform.testTag
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -77,6 +78,7 @@ fun ChooseCurrencyScreen(navController: NavController) {
                     viewModel.find(input.trim())
                 },
                 modifier = Modifier
+                    .testTag("ChooseCurrencyScreenChooseCurrencyInput")
                     .height(48.dp)
                     .padding(horizontal = 16.dp)
                     .fillMaxWidth()
@@ -96,6 +98,7 @@ fun ChooseCurrencyScreen(navController: NavController) {
             list.forEach { currency ->
                 Button(
                     modifier = Modifier
+                        .testTag("CurrencyTag${currency.second}")
                         .padding(horizontal = 16.dp)
                         .fillMaxWidth(),
                     onClick = {

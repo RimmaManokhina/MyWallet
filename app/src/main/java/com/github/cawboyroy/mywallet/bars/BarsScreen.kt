@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -83,7 +84,9 @@ fun BarsScreen() {
                 val currency = viewModel.chosenCurrency().collectAsStateWithLifecycle("").value
                 val yearAndTotal = state.yearAndSum(records, currency)
                 Text(
-                    modifier = Modifier.padding(all = 4.dp),
+                    modifier = Modifier
+                        .padding(all = 4.dp)
+                        .testTag("BarsMonthTotal"),
                     text = yearAndTotal.year,
                     style = TextStyle(
                         fontSize = 18.sp,
@@ -116,10 +119,15 @@ fun BarsScreen() {
                 contentPadding = PaddingValues(horizontal = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(items = records, key = { item -> item.toString() }) { it ->
-                    Column(Modifier
-                        .padding(vertical = 16.dp)
-                        .fillMaxHeight()) {
+                itemsIndexed(
+                    items = records,
+                    key = { index, item -> item.toString() }) { index, it ->
+                    Column(
+                        Modifier
+                            .padding(vertical = 16.dp)
+                            .fillMaxHeight()
+                    ) {
+
                         Spacer(modifier = Modifier.weight(1f))
                         Box(
                             modifier = Modifier
@@ -127,7 +135,11 @@ fun BarsScreen() {
                                 .width(48.dp)
                                 .height((lazyRowHeightDp * 0.8f) * it.percentage)
                         )
-                        Text(text = it.ui(currency), maxLines = 2)
+                        Text(
+                            text = it.ui(currency),
+                            maxLines = 2,
+                            modifier = Modifier.testTag("BarText at $index")
+                        )
                     }
                 }
             }

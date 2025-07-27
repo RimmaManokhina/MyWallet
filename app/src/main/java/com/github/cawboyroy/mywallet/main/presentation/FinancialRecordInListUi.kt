@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,20 +25,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.SemanticsPropertyKey
+import androidx.compose.ui.semantics.SemanticsPropertyReceiver
+import androidx.compose.ui.semantics.semantics
 
 @Composable
 fun FinancialRecordInListUi(
+    index: Int,
     modifier: Modifier,
+    @DrawableRes categoryId: Int,
     id: Long,
     isExpenses: Boolean,
     money: String,
     title: String,
     category: String,
-    onClick: (Long) -> Unit,
-    @DrawableRes categoryId: Int,
+    onClick: (Long) -> Unit
 ) {
     Card(
         modifier = modifier
+            .testTag("FinRecord at $index")
             .fillMaxWidth()
             .padding(vertical = 4.dp, horizontal = 8.dp)
             .clickable(enabled = true, onClick = { onClick.invoke(id) }),
@@ -45,12 +54,24 @@ fun FinancialRecordInListUi(
     ) {
         Row(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(8.dp)
                 .fillMaxWidth()
                 .height(IntrinsicSize.Min),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            Icon(
+                painter = painterResource(categoryId),
+                contentDescription = category,
+                modifier = Modifier
+                    .size(36.dp)
+                    .testTag("RecordIcon at $index")
+                    .semantics {
+                        this.drawableResId = categoryId
+                    },
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.width(4.dp))
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -58,6 +79,7 @@ fun FinancialRecordInListUi(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
+                    modifier = Modifier.testTag("RecordTitle at $index"),
                     text = title,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
@@ -65,6 +87,7 @@ fun FinancialRecordInListUi(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
+                    modifier = Modifier.testTag("RecordCategory at $index"),
                     text = category,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
@@ -79,13 +102,19 @@ fun FinancialRecordInListUi(
             )
 
             Text(
-                text = money.toString(),
+                text = money,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 color = Color(if (isExpenses) 0xFFFF0000 else 0xFF008000),
                 textAlign = TextAlign.End,
-                modifier = Modifier.align(Alignment.CenterVertically)
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .testTag("RecordMoney at $index")
             )
         }
     }
 }
+
+val DrawableResId = SemanticsPropertyKey<Int>("DrawableResId")
+
+var SemanticsPropertyReceiver.drawableResId by DrawableResId // Extension property for easy use
