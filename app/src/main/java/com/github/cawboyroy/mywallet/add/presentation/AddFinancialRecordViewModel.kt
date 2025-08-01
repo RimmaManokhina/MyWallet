@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.github.cawboyroy.mywallet.add.data.AddRepository
 import com.github.cawboyroy.mywallet.core.RunAsync
+import com.github.cawboyroy.mywallet.di.ProvideTime
 import com.github.cawboyroy.mywallet.edit.presentation.isValid
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +18,10 @@ import javax.inject.Inject
 class AddFinancialRecordViewModel @Inject constructor(
     private val runAsync: RunAsync,
     private val addRepository: AddRepository,
+    private val provideTime: ProvideTime
 ) : ViewModel() {
+
+    fun now() = provideTime.now()
 
     private val closeState: MutableStateFlow<Close> = MutableStateFlow(Close.Empty)
     val close: StateFlow<Close>
@@ -41,7 +45,8 @@ class AddFinancialRecordViewModel @Inject constructor(
                         category,
                         description,
                         time,
-                        isExpenses
+                        isExpenses,
+                        provideTime.now()
                     )
                 )
             }
@@ -64,7 +69,7 @@ data class FinancialRecord(
     val description: String,
     val time: Long,
     val isExpenses: Boolean,
-    val id: Long = System.currentTimeMillis(),
+    val id: Long,
 ) : Serializable
 
 interface Close {

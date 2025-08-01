@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.cawboyroy.mywallet.add.presentation.FinancialRecord
 import com.github.cawboyroy.mywallet.core.RunAsync
 import com.github.cawboyroy.mywallet.currency.data.ChosenCurrencyRepository
+import com.github.cawboyroy.mywallet.di.ProvideTime
 import com.github.cawboyroy.mywallet.main.data.ListRepository
 import com.github.cawboyroy.mywallet.main.presentation.MonthsUi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +24,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ChartsViewModel @Inject constructor(
+    provideTime: ProvideTime,
     private val chosenCurrencyRepository: ChosenCurrencyRepository,
     private val savedStateHandle: SavedStateHandle,
     runAsync: RunAsync,
@@ -34,7 +36,7 @@ class ChartsViewModel @Inject constructor(
     val screenStateFlow = savedStateHandle.getStateFlow(
         SCREEN_STATE, ChartsScreenState(
             isExpenses = true,
-            time = MonthsUi(System.currentTimeMillis()),
+            time = MonthsUi(provideTime.now()),
         )
     )
 

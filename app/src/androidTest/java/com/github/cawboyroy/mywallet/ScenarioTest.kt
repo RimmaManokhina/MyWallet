@@ -1,6 +1,12 @@
 package com.github.cawboyroy.mywallet
 
+import android.content.Context
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
+import com.github.cawboyroy.mywallet.di.FakeTime
+import com.github.cawboyroy.mywallet.di.TimeModule
+import com.github.cawboyroy.mywallet.main.data.FinancialRecordsDatabase
 import com.github.cawboyroy.mywallet.page.AddRecordPage
 import com.github.cawboyroy.mywallet.page.BarsPage
 import com.github.cawboyroy.mywallet.page.ChartPage
@@ -8,16 +14,40 @@ import com.github.cawboyroy.mywallet.page.ChooseCurrencyPage
 import com.github.cawboyroy.mywallet.page.HomePage
 import com.github.cawboyroy.mywallet.page.MainPage
 import com.github.cawboyroy.mywallet.page.SettingsPage
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import javax.inject.Inject
 
+@UninstallModules(TimeModule::class)
+@HiltAndroidTest
 class ScenarioTest {
 
-    @get:Rule
+    @get:Rule(order = 0)
+    val hiltRule = HiltAndroidRule(this)
+
+    @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
+    @Inject
+    lateinit var fakeTime: FakeTime
+
+    @Before
+    fun setUp() {
+        hiltRule.inject()
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        Room.databaseBuilder(
+            context,
+            FinancialRecordsDatabase::class.java,
+            context.getString(R.string.app_name)
+        ).build().clearAllTables()
+    }
+
     @Test
-    fun add() {
+    fun addRecord() {
         val mainPage = MainPage(composeTestRule)
         mainPage.clickSettings()
 
@@ -39,10 +69,12 @@ class ScenarioTest {
         mainPage.clickHome()
         val homePage = HomePage(composeTestRule)
         homePage.checkMonthTotal(text = "RUB 0")
+        homePage.checkMonth(text = "June")
 
         homePage.clickAdd()
         val addRecordPage = AddRecordPage(composeTestRule)
         addRecordPage.checkCurrency(value = "RUB")
+        addRecordPage.checkTime("Jun 27, 2025 09:30")
         addRecordPage.checkSaveButtonDisabled()
 
         addRecordPage.inputMoney(value = "1000")
@@ -58,7 +90,7 @@ class ScenarioTest {
         addRecordPage.checkSaveButtonEnabled()
         addRecordPage.clickOnSaveButton()
         homePage.checkMonthTotal(text = "RUB 1,000")
-        homePage.checkDaySum(position = 0, "RUB 1,000")
+        homePage.checkDaySum(position = 0, sum = "RUB 1,000", date = "June 27")
         homePage.checkRecord(
             position = 1,
             title = "bread",
@@ -68,24 +100,26 @@ class ScenarioTest {
         )
         mainPage.clickChart()
         val chartPage = ChartPage(composeTestRule)
-        chartPage.checkMonthTotal("RUB 1,000")
+        chartPage.checkMonthTotal(sum = "RUB 1,000")
+        chartPage.checkMonth(text = "June")
         chartPage.checkCategoryHeader(
-            0,
-            R.drawable.ic_category_groceries,
-            "Groceries 100.00%\nRUB 1,000"
+            position = 0,
+            drawableResId = R.drawable.ic_category_groceries,
+            details = "Groceries 100.00%\nRUB 1,000"
         )
         chartPage.clickOnCollapsableHeader(0)
         chartPage.checkRecordDetail(
-            1,
-            R.drawable.ic_category_groceries,
-            "bread",
-            "Groceries",
-            "RUB 1,000"
+            position = 1,
+            drawableResId = R.drawable.ic_category_groceries,
+            title = "bread",
+            category = "Groceries",
+            money = "RUB 1,000",
+            time = "Jun 27, 2025 09:30"
         )
 
         mainPage.clickBars()
         val barsPage = BarsPage(composeTestRule)
-        barsPage.checkMonthTotal("RUB 1,000")
-        barsPage.checkBarTextContains(0, "RUB 1,000")
+        barsPage.checkYearTotal(year = "2025", money = "RUB 1,000")
+        barsPage.checkBarText(position = 0, "June\nRUB 1,000")
     }
 }

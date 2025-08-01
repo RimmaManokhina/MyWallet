@@ -97,7 +97,8 @@ fun FinancialRecordInListWithTimeUi(
                     text = time,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
-                    maxLines = 1
+                    maxLines = 1,
+                    modifier = Modifier.testTag("ChartRecordTime at $index")
                 )
             }
 

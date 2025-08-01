@@ -19,15 +19,17 @@ class AddRecordPage(private val composeTestRule: ComposeTestRule) {
     private val moneyInput = composeTestRule.onNodeWithTag("MoneyInputField")
     private val titleInput = composeTestRule.onNodeWithTag("RecordTitleInputField")
     private val categoryInput = composeTestRule.onNodeWithTag("RecordCategoryInputField")
+    private val time = composeTestRule.onNodeWithTag("RecordTime")
 
+    fun checkTime(text: String) = time.assertTextEquals(text)
     fun checkCurrency(value: String) = currency.assertTextEquals(value)
     fun checkSaveButtonEnabled() = saveButton.assertIsEnabled()
     fun checkSaveButtonDisabled() = saveButton.assertIsNotEnabled()
     fun clickOnSaveButton() = saveButton.performClick()
     fun inputMoney(value: String) = moneyInput.performTextInput(value)
-    fun checkMoneyInput(value: String) = moneyInput.assertTextEquals("1,000")
+    fun checkMoneyInput(value: String) = moneyInput.assertTextEquals(value)
     fun inputTitle(title: String) = titleInput.performTextInput(title)
-    fun inputCategory(category: String) = categoryInput.performTextInput(category)
+
     fun checkCategoryInput(value: String) = categoryInput.assert(hasText(value))
     fun requestFocusOnCategoryInput() = categoryInput.requestFocus()
     fun clickOnSuggestion(index: Int) {
