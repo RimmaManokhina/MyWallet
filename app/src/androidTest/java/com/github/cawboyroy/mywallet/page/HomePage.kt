@@ -12,13 +12,18 @@ import com.github.cawboyroy.mywallet.main.presentation.DrawableResId
 class HomePage(private val composeTestRule: ComposeTestRule) {
 
     private val monthTotal = composeTestRule.onNodeWithTag("ListContentMonthTotal")
+    private val month = composeTestRule.onNodeWithTag("ListContentMonth")
     private val addButton = composeTestRule.onNodeWithTag("HomeAddButton")
 
+    fun checkMonth(text: String) = month.assertTextEquals(text)
     fun checkMonthTotal(text: String) = monthTotal.assertTextEquals(text)
     fun clickAdd() = addButton.performClick()
-    fun checkDaySum(position: Int, text: String) =
+    fun checkDaySum(position: Int, sum: String, date: String) {
         composeTestRule.onNodeWithTag("DayUiSum at $position", useUnmergedTree = true)
-            .assertTextEquals(text)
+            .assertTextEquals(sum)
+        composeTestRule.onNodeWithTag("DayUiDate at $position", useUnmergedTree = true)
+            .assertTextEquals(date)
+    }
 
     fun checkRecord(
         position: Int,

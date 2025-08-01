@@ -117,4 +117,4 @@ fun FinancialRecordInListUi(
 
 val DrawableResId = SemanticsPropertyKey<Int>("DrawableResId")
 
-var SemanticsPropertyReceiver.drawableResId by DrawableResId // Extension property for easy use
+var SemanticsPropertyReceiver.drawableResId by DrawableResId

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.cawboyroy.mywallet.core.RunAsync
 import com.github.cawboyroy.mywallet.currency.data.ChosenCurrencyRepository
+import com.github.cawboyroy.mywallet.di.ProvideTime
 import com.github.cawboyroy.mywallet.main.data.ListRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,6 +23,7 @@ class ListViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     runAsync: RunAsync,
     repository: ListRepository,
+    provideTime: ProvideTime,
 ) : ViewModel(), RecordActions, AllDayActions {
 
     fun chosenCurrency() = chosenCurrencyRepository.value()
@@ -30,7 +32,7 @@ class ListViewModel @Inject constructor(
         SCREEN_STATE, ScreenState(
             allCollapsed = AllCollapsedUi.Expanded,
             isExpenses = true,
-            time = MonthsUi(System.currentTimeMillis()),
+            time = MonthsUi(provideTime.now()),
             collapsedIds = CollapsedIds(emptySet())
         )
     )

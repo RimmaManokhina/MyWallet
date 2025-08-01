@@ -108,7 +108,9 @@ fun ChartScreen(navController: NavController) {
                 val currency = viewModel.chosenCurrency().collectAsStateWithLifecycle("").value
                 val monthAndTotal = screenState.monthNameAndSum(records, currency)
                 Text(
-                    modifier = Modifier.padding(all = 4.dp),
+                    modifier = Modifier
+                        .padding(all = 4.dp)
+                        .testTag("ChartScreenMonth"),
                     text = monthAndTotal.month,
                     style = TextStyle(
                         fontSize = 18.sp,

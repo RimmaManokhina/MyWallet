@@ -67,7 +67,9 @@ fun ListContent(paddingValues: PaddingValues, onRecordClick: (Long) -> Unit) {
             val currency = viewModel.chosenCurrency().collectAsStateWithLifecycle("").value
             val monthAndTotal = state.monthNameAndSum(records, currency)
             Text(
-                modifier = Modifier.padding(all = 4.dp),
+                modifier = Modifier
+                    .padding(all = 4.dp)
+                    .testTag("ListContentMonth"),
                 text = monthAndTotal.month,
                 style = TextStyle(
                     fontSize = 18.sp,

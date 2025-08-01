@@ -12,8 +12,10 @@ import com.github.cawboyroy.mywallet.main.presentation.DrawableResId
 class ChartPage(private val composeTestRule: ComposeTestRule) {
 
     private val monthTotal = composeTestRule.onNodeWithTag("ChartScreenMonthTotal")
+    private val month = composeTestRule.onNodeWithTag("ChartScreenMonth")
 
     fun checkMonthTotal(sum: String) = monthTotal.assertTextEquals(sum)
+    fun checkMonth(text: String) = month.assertTextEquals(text)
 
     fun checkCategoryHeader(
         position: Int,
@@ -35,7 +37,8 @@ class ChartPage(private val composeTestRule: ComposeTestRule) {
         @DrawableRes drawableResId: Int,
         title: String,
         category: String,
-        money: String
+        money: String,
+        time: String
     ) = with(composeTestRule) {
         onNodeWithTag("ChartRecordIcon at $position", useUnmergedTree = true)
             .assert(SemanticsMatcher.expectValue(DrawableResId, drawableResId))
@@ -45,5 +48,7 @@ class ChartPage(private val composeTestRule: ComposeTestRule) {
             .assertTextEquals(category)
         onNodeWithTag("ChartRecordMoney at $position", useUnmergedTree = true)
             .assertTextEquals(money)
+        onNodeWithTag("ChartRecordTime at $position", useUnmergedTree = true)
+            .assertTextEquals(time)
     }
 }

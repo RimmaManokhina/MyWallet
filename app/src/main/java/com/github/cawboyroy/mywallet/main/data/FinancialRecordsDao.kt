@@ -1,13 +1,19 @@
 package com.github.cawboyroy.mywallet.main.data
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
-import androidx.room.Insert
 
 @Dao
 interface FinancialRecordsDao {
+
+    @Query("SELECT * FROM financial_records WHERE isExpenses=:isExpenses AND title LIKE :searchQuery || '%'")
+    suspend fun financialRecordsStartingWith(
+        searchQuery: String,
+        isExpenses: Boolean
+    ): List<FinancialRecordEntity>
 
     @Query("DELETE FROM financial_records")
     suspend fun clearAll()

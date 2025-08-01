@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.cawboyroy.mywallet.add.presentation.HandleMoney
 import com.github.cawboyroy.mywallet.core.RunAsync
 import com.github.cawboyroy.mywallet.currency.data.ChosenCurrencyRepository
+import com.github.cawboyroy.mywallet.di.ProvideTime
 import com.github.cawboyroy.mywallet.main.data.ListRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.PersistentList
@@ -31,6 +32,7 @@ class BarsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val chosenCurrencyRepository: ChosenCurrencyRepository,
     private val repository: ListRepository,
+    provideTime: ProvideTime,
     runAsync: RunAsync,
 ) : ViewModel() {
 
@@ -44,8 +46,8 @@ class BarsViewModel @Inject constructor(
     val screenStateFlow = savedStateHandle.getStateFlow(
         SCREEN_STATE, BarsScreenState(
             isExpenses = true,
-            time = YearsUi(System.currentTimeMillis()),
-        )
+            time = YearsUi(provideTime.now()),
+            )
     )
 
     init {
@@ -113,5 +115,4 @@ data class MonthSummaryUi(
         val monthUi = Month.of(month + 1).getDisplayName(FULL, Locale.getDefault())
         return monthUi + "\n" + HandleMoney.formatWhole(currency, sum)
     }
-
 }

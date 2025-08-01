@@ -86,7 +86,7 @@ fun BarsScreen() {
                 Text(
                     modifier = Modifier
                         .padding(all = 4.dp)
-                        .testTag("BarsMonthTotal"),
+                        .testTag("BarsYearTotal"),
                     text = yearAndTotal.year,
                     style = TextStyle(
                         fontSize = 18.sp,
@@ -96,7 +96,9 @@ fun BarsScreen() {
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    modifier = Modifier.padding(all = 4.dp),
+                    modifier = Modifier
+                        .padding(all = 4.dp)
+                        .testTag("BarsYear"),
                     text = yearAndTotal.total,
                     style = TextStyle(
                         fontSize = 18.sp,

@@ -1,6 +1,7 @@
 package com.github.cawboyroy.mywallet.add.presentation
 
 import android.icu.util.Calendar
+import androidx.compose.ui.platform.testTag
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -70,9 +71,10 @@ fun ChooseTime(value: Long, onValueChanged: (Long) -> Unit) {
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
         Text(
-            formatDate(value),
+            text = formatDate(value),
             style = MaterialTheme.typography.titleMedium,
-        )
+            modifier = Modifier.testTag("RecordTime"),
+            )
 
         Spacer(modifier = Modifier.weight(1f))
         ShowDatePickerButton {

@@ -51,7 +51,7 @@ fun AddFinancialRecordScreen(
             TitleField(title) { title = it }
             var category by rememberSaveable { mutableStateOf("") }
             CategoryField(category) { category = it }
-            var time by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
+            var time by rememberSaveable { mutableLongStateOf(viewModel.now()) }
             ChooseTime(time) { time = it }
             var description by rememberSaveable { mutableStateOf("") }
             DescriptionField(description) { description = it }

@@ -17,7 +17,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.github.cawboyroy.mywallet.di.CustomTestRunner"
     }
 
     buildTypes {
@@ -57,6 +57,7 @@ dependencies {
     androidTestImplementation(libs.androidx.room.testing)
 
     implementation(libs.hilt.android)
+    androidTestImplementation(libs.hilt.android.testing)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
