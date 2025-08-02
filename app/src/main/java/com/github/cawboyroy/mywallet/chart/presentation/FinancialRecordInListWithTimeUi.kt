@@ -45,6 +45,7 @@ fun FinancialRecordInListWithTimeUi(
 ) {
     Card(
         modifier = modifier
+            .testTag("ChartScreenItem at $index")
             .fillMaxWidth()
             .padding(vertical = 4.dp, horizontal = 16.dp)
             .clickable(enabled = true, onClick = { onClick.invoke(id) }),

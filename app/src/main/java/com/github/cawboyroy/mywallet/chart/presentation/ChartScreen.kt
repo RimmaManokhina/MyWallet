@@ -134,7 +134,9 @@ fun ChartScreen(navController: NavController) {
 
             LazyColumn(
                 state = listState,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag("ChartScreenContentLazyColumn")
             ) {
                 item {
                     PieChartSegmentsWithIcons(
