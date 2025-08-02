@@ -3,10 +3,13 @@ package com.github.cawboyroy.mywallet.page
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import com.github.cawboyroy.mywallet.main.presentation.DrawableResId
 
 class ChartPage(private val composeTestRule: ComposeTestRule) {
@@ -40,6 +43,9 @@ class ChartPage(private val composeTestRule: ComposeTestRule) {
         money: String,
         time: String
     ) = with(composeTestRule) {
+        onNodeWithTag("ChartScreenContentLazyColumn")
+            .performScrollToNode(hasTestTag("ChartScreenItem at $position"))
+            .assertIsDisplayed()
         onNodeWithTag("ChartRecordIcon at $position", useUnmergedTree = true)
             .assert(SemanticsMatcher.expectValue(DrawableResId, drawableResId))
         onNodeWithTag("ChartRecordTitle at $position", useUnmergedTree = true)

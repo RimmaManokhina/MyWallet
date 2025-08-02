@@ -53,7 +53,7 @@ class ChartsViewModel @Inject constructor(
             }.flatMapLatest { (screenState, currency) ->
                 val (min, max) = screenState.time.monthBoundaries()
                 repository.list(screenState.isExpenses, min, max)
-            }.map { it.toPersistentList() }
+            }.map { it.reversed().toPersistentList() }
         ) {
             recordsMutableStateFlow.value = it
         }

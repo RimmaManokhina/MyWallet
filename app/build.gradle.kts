@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.github.cawboyroy.mywallet"
-        minSdk = 28
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
