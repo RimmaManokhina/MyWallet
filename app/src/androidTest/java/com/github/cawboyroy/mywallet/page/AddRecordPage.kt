@@ -32,7 +32,8 @@ class AddRecordPage(private val composeTestRule: ComposeTestRule) {
 
     fun checkCategoryInput(value: String) = categoryInput.assert(hasText(value))
     fun requestFocusOnCategoryInput() = categoryInput.requestFocus()
-    fun clickOnSuggestion(index: Int) {
-        composeTestRule.onNodeWithTag("Suggestion at $index", useUnmergedTree = true).performClick()
+
+    fun clickOnSuggestion(id: Int) {
+        composeTestRule.onNodeWithTag("Suggestion at $id", useUnmergedTree = true).performClick()
     }
 }

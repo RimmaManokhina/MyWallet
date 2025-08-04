@@ -142,6 +142,7 @@ fun ChartScreen(navController: NavController) {
                     PieChartSegmentsWithIcons(
                         screenWidthDp,
                         modifier = Modifier
+                            .testTag("PieChartInLazyColumn")
                             .fillMaxWidth()
                             .height(screenWidthDp.dp),
                         screenState = screenState,

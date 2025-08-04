@@ -25,6 +25,9 @@ class ChartPage(private val composeTestRule: ComposeTestRule) {
         @DrawableRes drawableResId: Int,
         details: String
     ) {
+        composeTestRule.onNodeWithTag("ChartScreenContentLazyColumn")
+            .performScrollToNode(hasTestTag("ChartScreenHeader at $position"))
+            .assertIsDisplayed()
         composeTestRule.onNodeWithTag("CategoryHeaderIcon at $position", useUnmergedTree = true)
             .assert(SemanticsMatcher.expectValue(DrawableResId, drawableResId))
         composeTestRule.onNodeWithTag("CategoryHeaderDetails at $position", useUnmergedTree = true)
@@ -56,5 +59,12 @@ class ChartPage(private val composeTestRule: ComposeTestRule) {
             .assertTextEquals(money)
         onNodeWithTag("ChartRecordTime at $position", useUnmergedTree = true)
             .assertTextEquals(time)
+    }
+
+    fun clickOnIconInDonut(label: String) {
+        composeTestRule.onNodeWithTag("ChartScreenContentLazyColumn")
+            .performScrollToNode(hasTestTag("PieChartInLazyColumn"))
+        composeTestRule.onNodeWithTag("PieChartSegmentIcon $label")
+            .performClick()
     }
 }
