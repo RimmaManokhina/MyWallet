@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -198,9 +199,11 @@ private fun PieChartInner(
 
         val iconSize = 48.dp
         iconPositions.forEachIndexed { index, offset ->
+            val pieSegment: PieSegment = records[index].pieSegment(context)
             if (index < records.size)
                 Box(
                     modifier = Modifier
+                        .testTag("PieChartSegmentIcon ${pieSegment.label}")
                         .size(iconSize)
                         .absoluteOffset {
                             with(density) {
@@ -224,7 +227,6 @@ private fun PieChartInner(
                         },
                     contentAlignment = Alignment.Center
                 ) {
-                    val pieSegment: PieSegment = records[index].pieSegment(context)
                     Icon(
                         painter = painterResource(pieSegment.imageVectorResId),
                         contentDescription = pieSegment.label,

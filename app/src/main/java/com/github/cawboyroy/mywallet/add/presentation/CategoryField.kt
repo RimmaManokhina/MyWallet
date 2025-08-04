@@ -1,8 +1,6 @@
 package com.github.cawboyroy.mywallet.add.presentation
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.ui.platform.testTag
 import androidx.annotation.StringRes
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,7 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
@@ -35,6 +33,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
@@ -260,7 +259,7 @@ fun HorizontallyScrollableTwoRowIconGridWithTitles(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 SingleIconWithTitleView(
-                    index = index + 1,
+                    index = iconPair[1].id,
                     iconData = iconPair[0],
                     onIconClick = onIconClick,
                     iconSize = iconSize,
@@ -271,7 +270,7 @@ fun HorizontallyScrollableTwoRowIconGridWithTitles(
 
                 if (iconPair.size > 1)
                     SingleIconWithTitleView(
-                        index = index,
+                        index = iconPair[0].id,
                         iconData = iconPair[1],
                         onIconClick = onIconClick,
                         iconSize = iconSize,

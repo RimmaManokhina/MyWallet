@@ -78,6 +78,7 @@ interface FinancialRecordChartUi {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = modifier
+                    .testTag("ChartScreenHeader at $index")
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .border(
                         width = 1.dp,
