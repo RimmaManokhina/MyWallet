@@ -317,4 +317,82 @@ class ScenarioTest {
         barsPage.checkYearTotal(year = "2025", money = "RUB 4,000")
         barsPage.checkBarText(position = 0, "June\nRUB 4,000")
     }
+
+    @Test
+    fun addIncomeAfterExpense() {
+        addExpense()
+        val mainPage = MainPage(composeTestRule)
+        mainPage.clickHome()
+        val homePage = HomePage(composeTestRule)
+        fakeTime.setTime(
+            2025, Calendar.JUNE, 27,
+            10, 12, 20
+        )
+        homePage.clickAdd()
+        val addRecordPage = AddRecordPage(composeTestRule)
+        addRecordPage.checkCurrency(value = "RUB")
+        addRecordPage.checkTime("Jun 27, 2025 10:12")
+        addRecordPage.checkSaveButtonDisabled()
+        addRecordPage.chooseIncomes()
+        addRecordPage.inputMoney(value = "3000")
+        addRecordPage.checkMoneyInput(value = "3,000")
+        addRecordPage.checkSaveButtonDisabled()
+
+        addRecordPage.inputTitle(title = "restaurant tips")
+        addRecordPage.checkSaveButtonDisabled()
+        addRecordPage.checkCategoryInput(value = "")
+        addRecordPage.requestFocusOnCategoryInput()
+        addRecordPage.clickOnSuggestion(id = 29)
+        addRecordPage.checkCategoryInput("Tips")
+        addRecordPage.checkSaveButtonEnabled()
+        addRecordPage.clickOnSaveButton()
+
+        homePage.checkMonthTotal(text = "RUB 1,000")
+        homePage.checkDaySum(position = 0, sum = "RUB 1,000", date = "June 27")
+        homePage.checkRecord(
+            position = 1,
+            title = "bread",
+            category = "Groceries",
+            money = "RUB 1,000",
+            drawableResId = R.drawable.ic_category_groceries
+        )
+
+        homePage.chooseIncomes()
+        homePage.checkMonthTotal(text = "RUB 3,000")
+        homePage.checkDaySum(position = 0, sum = "RUB 3,000", date = "June 27")
+        homePage.checkRecord(
+            position = 1,
+            title = "restaurant tips",
+            category = "Tips",
+            money = "RUB 3,000",
+            drawableResId = R.drawable.ic_payment_arrow_down
+        )
+
+        mainPage.clickChart()
+        val chartPage = ChartPage(composeTestRule)
+        chartPage.checkMonthTotal(sum = "RUB 1,000")
+        chartPage.checkMonth(text = "June")
+        chartPage.checkCategoryHeader(
+            position = 0,
+            drawableResId = R.drawable.ic_category_groceries,
+            details = "Groceries 100.00%\nRUB 1,000"
+        )
+        chartPage.chooseIncomes()
+        chartPage.checkMonthTotal(sum = "RUB 3,000")
+        chartPage.checkMonth(text = "June")
+        chartPage.checkCategoryHeader(
+            position = 0,
+            drawableResId = R.drawable.ic_payment_arrow_down,
+            details = "Tips 100.00%\nRUB 3,000"
+        )
+
+        mainPage.clickBars()
+        val barsPage = BarsPage(composeTestRule)
+        barsPage.checkYearTotal(year = "2025", money = "RUB 1,000")
+        barsPage.checkBarText(position = 0, "June\nRUB 1,000")
+
+        barsPage.chooseIncomes()
+        barsPage.checkYearTotal(year = "2025", money = "RUB 3,000")
+        barsPage.checkBarText(position = 0, "June\nRUB 3,000")
+    }
 }

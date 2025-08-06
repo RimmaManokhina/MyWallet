@@ -246,6 +246,7 @@ fun HorizontallyScrollableTwoRowIconGridWithTitles(
 
     LazyRow(
         modifier = modifier
+            .testTag("CategoryFieldSuggestionsLazyRow")
             .fillMaxWidth()
             .padding(horizontal = 8.dp),
         contentPadding = PaddingValues(horizontal = itemPadding / 2),

@@ -2,6 +2,7 @@ package com.github.cawboyroy.mywallet.add.presentation
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.ui.platform.testTag
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -75,6 +76,7 @@ fun AnimatedIncomeExpenseToggle(
             tabs.forEachIndexed { index, tab ->
                 Box(
                     modifier = Modifier
+                        .testTag("ExpensesIncomeToggle ${stringResource(tab)}")
                         .weight(1f)
                         .fillMaxHeight()
                         .onGloballyPositioned { coordinates ->
