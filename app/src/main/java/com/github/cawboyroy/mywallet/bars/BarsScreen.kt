@@ -114,6 +114,7 @@ fun BarsScreen() {
             LazyRow(
                 state = lazyListState,
                 modifier = Modifier
+                    .testTag("BarsLazyRow")
                     .fillMaxSize()
                     .onGloballyPositioned { coordinates ->
                         lazyRowHeightDp = with(density) { coordinates.size.height.toDp() }
@@ -126,6 +127,7 @@ fun BarsScreen() {
                     key = { index, item -> item.toString() }) { index, it ->
                     Column(
                         Modifier
+                            .testTag("Bar at $index")
                             .padding(vertical = 16.dp)
                             .fillMaxHeight()
                     ) {
