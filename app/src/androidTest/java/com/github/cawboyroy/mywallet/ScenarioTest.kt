@@ -395,4 +395,74 @@ class ScenarioTest {
         barsPage.checkYearTotal(year = "2025", money = "RUB 3,000")
         barsPage.checkBarText(position = 0, "June\nRUB 3,000")
     }
+
+    @Test
+    fun addTwelveExpensesAndTwelveIncomesForAYear() {
+        val mainPage = MainPage(composeTestRule)
+        mainPage.clickSettings()
+        val settingsPage = SettingsPage(composeTestRule)
+        settingsPage.clickChooseCurrency()
+        val chooseCurrencyPage = ChooseCurrencyPage(composeTestRule)
+        chooseCurrencyPage.input(text = "$")
+        chooseCurrencyPage.clickSaveButton()
+
+        val homePage = HomePage(composeTestRule)
+        val addRecordPage = AddRecordPage(composeTestRule)
+        val barsPage = BarsPage(composeTestRule)
+
+        val sums = listOf(
+            "January\n$ 1,000",
+            "February\n$ 2,000",
+            "March\n$ 3,000",
+            "April\n$ 4,000",
+            "May\n$ 5,000",
+            "June\n$ 6,000",
+            "July\n$ 7,000",
+            "August\n$ 8,000",
+            "September\n$ 9,000",
+            "October\n$ 10,000",
+            "November\n$ 11,000",
+            "December\n$ 12,000"
+        )
+        var sum = 0
+        repeat(12) {
+            mainPage.clickHome()
+            val date = Date(
+                2024,
+                it,
+                5,
+                13,
+                15,
+                44
+            )
+            date.changeTime(fakeTime)
+            homePage.clickAdd()
+            val money = 1000 * (it + 1)
+            sum += (it + 1)
+
+            addRecordPage.inputMoney(value = money.toString())
+            addRecordPage.inputTitle(title = "bread")
+            addRecordPage.requestFocusOnCategoryInput()
+            addRecordPage.clickOnSuggestion(id = 1)
+
+            addRecordPage.clickOnSaveButton()
+            mainPage.clickBars()
+            barsPage.checkBarText(position = it, text = sums[it])
+            barsPage.checkYearTotal(year = "2024", money = "$ $sum,000")
+        }
+    }
+}
+
+private data class Date(
+    private val year: Int,
+    private val month: Int,
+    private val day: Int,
+    private val hour: Int,
+    private val minutes: Int,
+    private val seconds: Int,
+) {
+
+    fun changeTime(fakeTime: FakeTime) {
+        fakeTime.setTime(year, month, day, hour, minutes, seconds)
+    }
 }
