@@ -15,6 +15,7 @@ class HomePage(private val composeTestRule: ComposeTestRule) {
     private val month = composeTestRule.onNodeWithTag("ListContentMonth")
     private val addButton = composeTestRule.onNodeWithTag("HomeAddButton")
     private val incomeTabToggle = composeTestRule.onNodeWithTag("ExpensesIncomeToggle Incomes")
+    private val leftButton = composeTestRule.onNodeWithTag("LeftButton")
 
     fun checkMonth(text: String) = month.assertTextEquals(text)
     fun checkMonthTotal(text: String) = monthTotal.assertTextEquals(text)
@@ -46,4 +47,10 @@ class HomePage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun chooseIncomes() = incomeTabToggle.performClick()
+
+    fun clickLeft(times: Int) {
+        repeat(times) {
+            leftButton.performClick()
+        }
+    }
 }
