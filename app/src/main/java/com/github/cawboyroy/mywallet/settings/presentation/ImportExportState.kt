@@ -134,7 +134,9 @@ interface ImportExportState : Serializable {
             userInput: String,
             onUserInputChange: (String) -> Unit,
         ) {
-            onUserInputChange("")
+            LaunchedEffect(Unit) {
+                onUserInputChange("")
+            }
             Initial.Show(activity, launcher, viewModel, userInput, onUserInputChange)
             Text(
                 textAlign = TextAlign.Center,
