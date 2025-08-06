@@ -56,8 +56,14 @@ fun BarsScreen() {
     Scaffold { contentPadding ->
         Column(modifier = Modifier.padding(contentPadding)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Button(onClick = viewModel::showPreviousYear, modifier = Modifier.padding(4.dp)) {
-                    Icon(
+                Button(
+                    onClick = viewModel::showPreviousYear,
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .testTag("LeftButton")
+                ) {
+
+                Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.previous_year)
                     )

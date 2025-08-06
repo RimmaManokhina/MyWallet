@@ -78,7 +78,9 @@ fun ChartScreen(navController: NavController) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Button(
                     onClick = viewModel::showPreviousMonth,
-                    modifier = Modifier.padding(4.dp)
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .testTag("LeftButton")
                 ) {
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,

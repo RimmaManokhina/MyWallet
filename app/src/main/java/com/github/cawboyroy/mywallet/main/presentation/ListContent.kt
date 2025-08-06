@@ -39,7 +39,13 @@ fun ListContent(paddingValues: PaddingValues, onRecordClick: (Long) -> Unit) {
 
     Column(modifier = Modifier.padding(paddingValues)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Button(onClick = viewModel::showPreviousMonth, modifier = Modifier.padding(4.dp)) {
+            Button(
+                onClick = viewModel::showPreviousMonth,
+                modifier = Modifier
+                    .padding(4.dp)
+                    .testTag("LeftButton")
+            ) {
+
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = stringResource(R.string.previous_month)

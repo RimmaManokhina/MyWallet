@@ -13,6 +13,7 @@ class BarsPage(private val composeTestRule: ComposeTestRule) {
     private val year = composeTestRule.onNodeWithTag("BarsYear")
     private val yearTotal = composeTestRule.onNodeWithTag("BarsYearTotal")
     private val incomeTabInToggle = composeTestRule.onNodeWithTag("ExpensesIncomeToggle Incomes")
+    private val leftButton = composeTestRule.onNodeWithTag("LeftButton")
 
     fun checkYearTotal(year: String, money: String) {
         this.year.assertTextEquals(year)
@@ -28,4 +29,10 @@ class BarsPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun chooseIncomes() = incomeTabInToggle.performClick()
+
+    fun clickLeft(times: Int) {
+        repeat(times) {
+            leftButton.performClick()
+        }
+    }
 }

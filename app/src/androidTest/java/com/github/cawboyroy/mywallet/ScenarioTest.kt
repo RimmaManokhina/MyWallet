@@ -451,6 +451,126 @@ class ScenarioTest {
             barsPage.checkYearTotal(year = "2024", money = "$ $sum,000")
         }
     }
+
+    @Test
+    fun addExpensesForLastTwoYears() {
+        val mainPage = MainPage(composeTestRule)
+        mainPage.clickSettings()
+        val settingsPage = SettingsPage(composeTestRule)
+        settingsPage.clickChooseCurrency()
+        val chooseCurrencyPage = ChooseCurrencyPage(composeTestRule)
+        chooseCurrencyPage.input(text = "$")
+        chooseCurrencyPage.clickSaveButton()
+
+        val homePage = HomePage(composeTestRule)
+        val addRecordPage = AddRecordPage(composeTestRule)
+        val chartPage = ChartPage(composeTestRule)
+        val barsPage = BarsPage(composeTestRule)
+
+        mainPage.clickHome()
+        fakeTime.setTime(
+            2023, Calendar.MARCH, 1,
+            14, 15, 30
+        )
+        homePage.clickAdd()
+        addRecordPage.inputMoney(value = "1000")
+        addRecordPage.inputTitle(title = "food")
+        addRecordPage.requestFocusOnCategoryInput()
+        addRecordPage.clickOnSuggestion(id = 1)
+        addRecordPage.clickOnSaveButton()
+
+        fakeTime.setTime(
+            2024, Calendar.APRIL, 2,
+            17, 20, 40
+        )
+        homePage.clickAdd()
+        addRecordPage.inputMoney(value = "2000")
+        addRecordPage.inputTitle(title = "rice")
+        addRecordPage.requestFocusOnCategoryInput()
+        addRecordPage.clickOnSuggestion(id = 1)
+        addRecordPage.clickOnSaveButton()
+
+        fakeTime.setTime(
+            2025, Calendar.MAY, 3,
+            19, 30, 55
+        )
+        homePage.clickAdd()
+        addRecordPage.inputMoney(value = "3000")
+        addRecordPage.inputTitle(title = "corn")
+        addRecordPage.requestFocusOnCategoryInput()
+        addRecordPage.clickOnSuggestion(id = 1)
+        addRecordPage.clickOnSaveButton()
+
+        homePage.clickLeft(1)
+        homePage.checkMonth("May")
+        homePage.checkMonthTotal("$ 3,000")
+        homePage.checkDaySum(0, "$ 3,000", "May 3")
+        homePage.checkRecord(
+            1,
+            "corn",
+            "Groceries",
+            "$ 3,000",
+            R.drawable.ic_category_groceries
+        )
+        homePage.clickLeft(13)
+        homePage.checkMonth("April")
+        homePage.checkMonthTotal("$ 2,000")
+        homePage.checkDaySum(0, "$ 2,000", "April 2")
+        homePage.checkRecord(
+            1,
+            "rice",
+            "Groceries",
+            "$ 2,000",
+            R.drawable.ic_category_groceries
+        )
+        homePage.clickLeft(13)
+        homePage.checkMonth("March")
+        homePage.checkMonthTotal("$ 1,000")
+        homePage.checkDaySum(0, "$ 1,000", "March 1")
+        homePage.checkRecord(
+            1,
+            "food",
+            "Groceries",
+            "$ 1,000",
+            R.drawable.ic_category_groceries
+        )
+        mainPage.clickChart()
+
+        chartPage.checkMonth("May")
+        chartPage.checkMonthTotal("$ 3,000")
+        chartPage.checkCategoryHeader(
+            0,
+            R.drawable.ic_category_groceries,
+            "Groceries 100.00%\n$ 3,000"
+        )
+
+        chartPage.clickLeft(13)
+        chartPage.checkMonth("April")
+        chartPage.checkMonthTotal("$ 2,000")
+        chartPage.checkCategoryHeader(
+            0,
+            R.drawable.ic_category_groceries,
+            "Groceries 100.00%\n$ 2,000"
+        )
+        chartPage.clickLeft(13)
+        chartPage.checkMonth("March")
+        chartPage.checkMonthTotal("$ 1,000")
+        chartPage.checkCategoryHeader(
+            0,
+            R.drawable.ic_category_groceries,
+            "Groceries 100.00%\n$ 1,000"
+        )
+
+        mainPage.clickBars()
+        barsPage.checkYearTotal(year = "2025", money = "$ 3,000")
+        barsPage.checkBarText(position = 0, "May\n$ 3,000")
+        barsPage.clickLeft(1)
+        barsPage.checkYearTotal(year = "2024", money = "$ 2,000")
+        barsPage.checkBarText(position = 0, "April\n$ 2,000")
+        barsPage.clickLeft(1)
+        barsPage.checkYearTotal(year = "2023", money = "$ 1,000")
+        barsPage.checkBarText(position = 0, "March\n$ 1,000")
+    }
 }
 
 private data class Date(

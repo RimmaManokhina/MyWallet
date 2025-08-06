@@ -17,6 +17,7 @@ class ChartPage(private val composeTestRule: ComposeTestRule) {
     private val monthTotal = composeTestRule.onNodeWithTag("ChartScreenMonthTotal")
     private val month = composeTestRule.onNodeWithTag("ChartScreenMonth")
     private val incomeTabInToggle = composeTestRule.onNodeWithTag("ExpensesIncomeToggle Incomes")
+    private val leftButton = composeTestRule.onNodeWithTag("LeftButton")
 
     fun checkMonthTotal(sum: String) = monthTotal.assertTextEquals(sum)
     fun checkMonth(text: String) = month.assertTextEquals(text)
@@ -70,4 +71,10 @@ class ChartPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun chooseIncomes() = incomeTabInToggle.performClick()
+
+    fun clickLeft(times: Int) {
+        repeat(times) {
+            leftButton.performClick()
+        }
+    }
 }
