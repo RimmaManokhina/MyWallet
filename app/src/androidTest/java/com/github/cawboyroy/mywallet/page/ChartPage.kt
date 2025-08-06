@@ -16,6 +16,7 @@ class ChartPage(private val composeTestRule: ComposeTestRule) {
 
     private val monthTotal = composeTestRule.onNodeWithTag("ChartScreenMonthTotal")
     private val month = composeTestRule.onNodeWithTag("ChartScreenMonth")
+    private val incomeTabInToggle = composeTestRule.onNodeWithTag("ExpensesIncomeToggle Incomes")
 
     fun checkMonthTotal(sum: String) = monthTotal.assertTextEquals(sum)
     fun checkMonth(text: String) = month.assertTextEquals(text)
@@ -67,4 +68,6 @@ class ChartPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithTag("PieChartSegmentIcon $label")
             .performClick()
     }
+
+    fun chooseIncomes() = incomeTabInToggle.performClick()
 }

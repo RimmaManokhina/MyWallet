@@ -1,14 +1,17 @@
 package com.github.cawboyroy.mywallet.page
 
 import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.requestFocus
 
@@ -20,6 +23,7 @@ class AddRecordPage(private val composeTestRule: ComposeTestRule) {
     private val titleInput = composeTestRule.onNodeWithTag("RecordTitleInputField")
     private val categoryInput = composeTestRule.onNodeWithTag("RecordCategoryInputField")
     private val time = composeTestRule.onNodeWithTag("RecordTime")
+    private val incomeTabInToggle = composeTestRule.onNodeWithTag("ExpensesIncomeToggle Incomes")
 
     fun checkTime(text: String) = time.assertTextEquals(text)
     fun checkCurrency(value: String) = currency.assertTextEquals(value)
@@ -34,6 +38,11 @@ class AddRecordPage(private val composeTestRule: ComposeTestRule) {
     fun requestFocusOnCategoryInput() = categoryInput.requestFocus()
 
     fun clickOnSuggestion(id: Int) {
+        composeTestRule.onNodeWithTag("CategoryFieldSuggestionsLazyRow")
+            .performScrollToNode(hasTestTag("Suggestion at $id"))
+            .assertIsDisplayed()
         composeTestRule.onNodeWithTag("Suggestion at $id", useUnmergedTree = true).performClick()
     }
+
+    fun chooseIncomes() = incomeTabInToggle.performClick()
 }

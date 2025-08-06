@@ -14,6 +14,7 @@ class HomePage(private val composeTestRule: ComposeTestRule) {
     private val monthTotal = composeTestRule.onNodeWithTag("ListContentMonthTotal")
     private val month = composeTestRule.onNodeWithTag("ListContentMonth")
     private val addButton = composeTestRule.onNodeWithTag("HomeAddButton")
+    private val incomeTabToggle = composeTestRule.onNodeWithTag("ExpensesIncomeToggle Incomes")
 
     fun checkMonth(text: String) = month.assertTextEquals(text)
     fun checkMonthTotal(text: String) = monthTotal.assertTextEquals(text)
@@ -43,4 +44,6 @@ class HomePage(private val composeTestRule: ComposeTestRule) {
         ).assert(SemanticsMatcher.expectValue(DrawableResId, drawableResId))
 
     }
+
+    fun chooseIncomes() = incomeTabToggle.performClick()
 }
