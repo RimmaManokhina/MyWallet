@@ -13,7 +13,7 @@ class HomePage(private val composeTestRule: ComposeTestRule) {
 
     private val monthTotal = composeTestRule.onNodeWithTag("ListContentMonthTotal")
     private val month = composeTestRule.onNodeWithTag("ListContentMonth")
-    private val addButton = composeTestRule.onNodeWithTag("HomeAddButton")
+    private val addButton = composeTestRule.onNodeWithTag("AddFAB")
     private val incomeTabToggle = composeTestRule.onNodeWithTag("ExpensesIncomeToggle Incomes")
     private val leftButton = composeTestRule.onNodeWithTag("LeftButton")
 
