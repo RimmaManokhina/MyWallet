@@ -1,34 +1,32 @@
 package com.github.cawboyroy.mywallet.main.presentation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+
 import androidx.navigation.NavController
-import com.github.cawboyroy.mywallet.R
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                modifier = Modifier.testTag("HomeAddButton"),
-                onClick = { navController.navigate("add") }
-            ) {
-                Icon(
-                    Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.add)
-                )
-            }
-        }
-    ) { contentPadding ->
-        ListContent(contentPadding) { recordId ->
-            navController.navigate("edit/$recordId")
-        }
-    }
+    val viewModel: ListViewModel = hiltViewModel()
+    val records = viewModel.recordsFlow.collectAsStateWithLifecycle(emptyList()).value
+    val state = viewModel.screenStateFlow.collectAsStateWithLifecycle().value
+    val currency = viewModel.chosenCurrency().collectAsStateWithLifecycle("").value
+    val monthAndTotal = state.monthNameAndSum(records, currency)
+
+    HomeScreenUi(
+        navController = navController,
+        isExpenses = state.isExpenses,
+        month = monthAndTotal.month,
+        monthTotal = monthAndTotal.total,
+        allCollapsedUi = state.allCollapsed,
+        recordsUi = records.toPersistentList(),
+
+        changeIsExpenses = viewModel::switch,
+        onLeftButtonClick = viewModel::showPreviousMonth,
+        onRightButtonClick = viewModel::showNextMonth,
+        allDayActions = viewModel,
+        recordActions = viewModel
+    )
 }
