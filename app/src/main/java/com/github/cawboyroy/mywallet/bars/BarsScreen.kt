@@ -80,34 +80,14 @@ private fun BarsScreenUi(
 
     Scaffold { contentPadding ->
         Column(modifier = Modifier.padding(contentPadding)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Button(
-                    onClick = onLeftButtonClick,
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .testTag("LeftButton")
-                ) {
-
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.previous_year)
-                    )
-                }
-
-                AnimatedIncomeExpenseToggle(
-                    Modifier.weight(1f),
-                    if (isExpenses) 0 else 1
-                ) {
-                    changeIsExpenses(it == 0)
-                }
-
-                Button(onClick = onRightButtonClick, modifier = Modifier.padding(4.dp)) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = stringResource(R.string.next_year)
-                    )
-                }
-            }
+            TopUi(
+                onLeftButtonClick,
+                onRightButtonClick,
+                isExpenses,
+                changeIsExpenses,
+                R.string.previous_year,
+                R.string.next_year
+            )
 
             Row(
                 verticalAlignment = Alignment.CenterVertically
