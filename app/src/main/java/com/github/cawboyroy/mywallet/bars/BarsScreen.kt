@@ -44,7 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.cawboyroy.mywallet.R
 import com.github.cawboyroy.mywallet.add.presentation.AnimatedIncomeExpenseToggle
-
+import kotlinx.collections.immutable.PersistentList
 
 @Composable
 fun BarsScreen() {
@@ -52,18 +52,43 @@ fun BarsScreen() {
     val records = viewModel.recordsFlow.collectAsStateWithLifecycle().value
     val currency = viewModel.chosenCurrency().collectAsStateWithLifecycle("").value
     val state = viewModel.screenStateFlow.collectAsStateWithLifecycle().value
+    val yearAndTotal = state.yearAndSum(records, currency)
+
+    BarsScreenUi(
+        viewModel::showPreviousYear,
+        viewModel::showNextYear,
+        yearAndTotal.year,
+        yearAndTotal.total,
+        state.isExpenses,
+        viewModel::switch,
+        records,
+        currency
+    )
+}
+
+@Composable
+private fun BarsScreenUi(
+    onLeftButtonClick: () -> Unit,
+    onRightButtonClick: () -> Unit,
+    year: String,
+    total: String,
+    isExpenses: Boolean,
+    changeIsExpenses: (Boolean) -> Unit,
+    records: PersistentList<MonthSummaryUi>,
+    currency: String
+) {
 
     Scaffold { contentPadding ->
         Column(modifier = Modifier.padding(contentPadding)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Button(
-                    onClick = viewModel::showPreviousYear,
+                    onClick = onLeftButtonClick,
                     modifier = Modifier
                         .padding(4.dp)
                         .testTag("LeftButton")
                 ) {
 
-                Icon(
+                    Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.previous_year)
                     )
@@ -71,12 +96,12 @@ fun BarsScreen() {
 
                 AnimatedIncomeExpenseToggle(
                     Modifier.weight(1f),
-                    if (state.isExpenses) 0 else 1
+                    if (isExpenses) 0 else 1
                 ) {
-                    viewModel.switch(it == 0)
+                    changeIsExpenses(it == 0)
                 }
 
-                Button(onClick = viewModel::showNextYear, modifier = Modifier.padding(4.dp)) {
+                Button(onClick = onRightButtonClick, modifier = Modifier.padding(4.dp)) {
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = stringResource(R.string.next_year)
@@ -87,13 +112,11 @@ fun BarsScreen() {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                val currency = viewModel.chosenCurrency().collectAsStateWithLifecycle("").value
-                val yearAndTotal = state.yearAndSum(records, currency)
                 Text(
                     modifier = Modifier
                         .padding(all = 4.dp)
                         .testTag("BarsYearTotal"),
-                    text = yearAndTotal.year,
+                    text = year,
                     style = TextStyle(
                         fontSize = 18.sp,
                         color = LocalContentColor.current,
@@ -105,7 +128,7 @@ fun BarsScreen() {
                     modifier = Modifier
                         .padding(all = 4.dp)
                         .testTag("BarsYear"),
-                    text = yearAndTotal.total,
+                    text = total,
                     style = TextStyle(
                         fontSize = 18.sp,
                         color = LocalContentColor.current,
@@ -141,7 +164,7 @@ fun BarsScreen() {
                         Spacer(modifier = Modifier.weight(1f))
                         Box(
                             modifier = Modifier
-                                .background(color = Color(if (state.isExpenses) 0xFFFF0000 else 0xFF008000))
+                                .background(color = Color(if (isExpenses) 0xFFFF0000 else 0xFF008000))
                                 .width(48.dp)
                                 .height((lazyRowHeightDp * 0.8f) * it.percentage)
                         )
