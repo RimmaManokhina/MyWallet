@@ -16,11 +16,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -33,16 +31,14 @@ import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.cawboyroy.mywallet.R
-import com.github.cawboyroy.mywallet.add.presentation.FinancialRecord
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import java.lang.Math.toRadians
@@ -54,27 +50,22 @@ import kotlin.math.sin
 fun PieChartSegmentsWithIcons(
     composableSize: Int,
     modifier: Modifier = Modifier,
-    screenState: ChartsScreenState,
-    outerRecords: PersistentList<FinancialRecord>,
+    records: PersistentList<FinancialRecordChartUi>,
+
     outerRadiusRatio: Float = 0.8f,
     innerRadiusRatio: Float = 0.4f,
     gapAngle: Float = 1f,
     onClick: (FinancialRecordChartUi) -> Unit
 ) {
-    if (outerRecords.isEmpty())
+    if (records.isEmpty())
         Box(
             modifier = modifier,
             contentAlignment = Alignment.Center
         ) {
             Text(text = stringResource(R.string.no_data))
         }
-    else {
-        val viewModel = hiltViewModel<PieChartViewModel>()
-        val records = viewModel.recordsFlow.collectAsStateWithLifecycle().value
-        LaunchedEffect(outerRecords, screenState) {
-            viewModel.convert(screenState, outerRecords)
-        }
-        if (records.isNotEmpty()) PieChartInner(
+    else
+        PieChartInner(
             composableSize,
             modifier,
             records,
@@ -83,7 +74,6 @@ fun PieChartSegmentsWithIcons(
             gapAngle,
             onClick
         )
-    }
 }
 
 @Composable
@@ -247,7 +237,7 @@ data class PieSegment(
 @Preview(showBackground = true)
 @Composable
 fun PieChartWithIconsPreview() {
-    val percentages = listOf<Float>(
+    val percentages = listOf(
         40f, 30f, 20f, 10f
     )
     val segments = listOf(
