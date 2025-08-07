@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.github.cawboyroy.mywallet.R
-import com.github.cawboyroy.mywallet.add.presentation.AnimatedIncomeExpenseToggle
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -76,33 +75,13 @@ fun ChartScreenUi(
                 .fillMaxSize()
                 .padding(contentPadding)
         ) {
-            Row(verticalAlignment = Alignment.Companion.CenterVertically) {
-                Button(
-                    onClick = onLeftButtonClick,
-                    modifier = Modifier.Companion
-                        .padding(4.dp)
-                        .testTag("LeftButton")
-                ) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.previous_month)
-                    )
-                }
 
-                AnimatedIncomeExpenseToggle(
-                    Modifier.Companion.weight(1f),
-                    if (isExpenses) 0 else 1
-                ) {
-                    changeIsExpenses(it == 0)
-                }
-
-                Button(onClick = onRightButtonClick, modifier = Modifier.Companion.padding(4.dp)) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = stringResource(R.string.next_month)
-                    )
-                }
-            }
+            TopUi(
+                onLeftButtonClick,
+                onRightButtonClick,
+                isExpenses,
+                changeIsExpenses,
+            )
 
             Row(
                 modifier = Modifier.Companion.padding(horizontal = 8.dp),
@@ -170,6 +149,11 @@ fun ChartScreenUi(
             }
         }
     }
+}
+
+@Composable
+fun TopUi(x0: () -> Unit, x1: () -> Unit, x2: Boolean, x3: (Boolean) -> Unit) {
+    TODO("Not yet implemented")
 }
 
 @Preview(showBackground = true)
