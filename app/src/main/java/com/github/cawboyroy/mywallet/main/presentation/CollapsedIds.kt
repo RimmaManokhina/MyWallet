@@ -2,7 +2,7 @@ package com.github.cawboyroy.mywallet.main.presentation
 
 import java.io.Serializable
 
-data class CollapsedIds(private val set: Set<Int>) : Serializable {
+data class CollapsedIds(private val set: Set<Int> = emptySet()) : Serializable {
 
     fun add(day: Int): CollapsedIds {
         return CollapsedIds(set.toMutableSet().also { it.add(day) }.toSet())

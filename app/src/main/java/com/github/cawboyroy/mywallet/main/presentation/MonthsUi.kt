@@ -26,11 +26,6 @@ data class MonthsUi(private val now: Long) : Serializable {
         return total(list, currency)
     }
 
-    fun monthNameAndSum(data: List<FinancialRecordUi>, currency: String): MonthAndTotal {
-        val list: List<BigDecimal> = data.map { it.sum() }
-        return total(list, currency)
-    }
-
     private fun total(list: List<BigDecimal>, currency: String): MonthAndTotal {
         val instant = Instant.ofEpochMilli(now)
         val zonedDateTime = instant.atZone(ZoneId.systemDefault())
@@ -84,80 +79,6 @@ data class MonthsUi(private val now: Long) : Serializable {
         return Pair(currentMonthStartMillis, nextMonthStartMillis)
     }
 
-    fun separatedList(
-        currency: String,
-        collapsedDays: Set<Int>,
-        records: List<FinancialRecord>
-    ): List<FinancialRecordUi> {
-        if (records.isEmpty()) return emptyList()
-
-        val list = mutableListOf<FinancialRecordUi>()
-
-        var currentDaySum = BigDecimal.ZERO
-        var currentDayId = -1
-        var currentDayUi = ""
-        records.forEachIndexed { index, record ->
-            val (recordUi, recordId) = dayOfMonth(record.time)
-            if (currentDayId == -1) {
-                currentDayId = recordId
-                currentDayUi = recordUi
-            } else if (recordId != currentDayId) {
-                list.add(
-                    if (collapsedDays.contains(currentDayId))
-                        FinancialRecordUi.DayCollapsed(
-                            currency,
-                            currentDayUi,
-                            currentDayId,
-                            currentDaySum
-                        )
-                    else
-                        FinancialRecordUi.DayExpanded(
-                            currency,
-                            currentDayUi,
-                            currentDayId,
-                            currentDaySum
-                        )
-                )
-                currentDayId = recordId
-                currentDayUi = recordUi
-                currentDaySum = BigDecimal.ZERO
-            }
-
-            val isCurrentRecordDayCollapsed = collapsedDays.contains(recordId)
-            if (!isCurrentRecordDayCollapsed) list.add(
-                FinancialRecordUi.Base(
-                    currency,
-                    record.isExpenses,
-                    record.money,
-                    record.title,
-                    record.category,
-                    record.id
-                )
-            )
-
-            currentDaySum = currentDaySum.add(BigDecimal(record.money))
-
-            if (index == records.size - 1) list.add(
-                if (collapsedDays.contains(currentDayId))
-                    FinancialRecordUi.DayCollapsed(
-                        currency,
-                        currentDayUi,
-                        currentDayId,
-                        currentDaySum
-                    )
-                else
-                    FinancialRecordUi.DayExpanded(
-                        currency,
-                        currentDayUi,
-                        currentDayId,
-                        currentDaySum
-                    )
-            )
-        }
-
-        return list.reversed()
-    }
-
     fun makeCharts(currency: String, records: List<FinancialRecord>): List<FinancialRecordChartUi> {
         return makeChartsInner(currency, records) { true }
     }
@@ -197,22 +118,6 @@ data class MonthsUi(private val now: Long) : Serializable {
             )
         }
         return result
-    }
-
-
-    private fun dayOfMonth(time: Long): Pair<String, Int> {
-        val instant = Instant.ofEpochMilli(time)
-        val zonedDateTime = instant.atZone(ZoneId.systemDefault())
-        val day = zonedDateTime.dayOfMonth
-        val month: Month = zonedDateTime.month
-        return Pair(
-            "${
-                month.getDisplayName(
-                    TextStyle.FULL,
-                    Locale.getDefault()
-                )
-            } $day", day
-        )
     }
 }
 
