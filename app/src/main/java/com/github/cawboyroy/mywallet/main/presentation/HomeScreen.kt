@@ -3,25 +3,22 @@ package com.github.cawboyroy.mywallet.main.presentation
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-
 import androidx.navigation.NavController
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.PersistentList
+import java.io.Serializable
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    val viewModel: ListViewModel = hiltViewModel()
-    val records = viewModel.recordsFlow.collectAsStateWithLifecycle(emptyList()).value
-    val state = viewModel.screenStateFlow.collectAsStateWithLifecycle().value
-    val currency = viewModel.chosenCurrency().collectAsStateWithLifecycle("").value
-    val monthAndTotal = state.monthNameAndSum(records, currency)
+    val viewModel: HomeScreenViewModel = hiltViewModel()
+    val uiState = viewModel.screenState.collectAsStateWithLifecycle().value
 
     HomeScreenUi(
         navController = navController,
-        isExpenses = state.isExpenses,
-        month = monthAndTotal.month,
-        monthTotal = monthAndTotal.total,
-        allCollapsedUi = state.allCollapsed,
-        recordsUi = records.toPersistentList(),
+        isExpenses = uiState.isExpenses,
+        month = uiState.month,
+        monthTotal = uiState.total,
+        allCollapsedUi = uiState.allCollapsedUi,
+        recordsUi = uiState.recordsUi,
 
         changeIsExpenses = viewModel::switch,
         onLeftButtonClick = viewModel::showPreviousMonth,
@@ -30,3 +27,12 @@ fun HomeScreen(navController: NavController) {
         recordActions = viewModel
     )
 }
+
+data class HomeScreenState(
+    val now: Long,
+    val isExpenses: Boolean,
+    val month: String,
+    val total: String,
+    val allCollapsedUi: AllCollapsedUi,
+    val recordsUi: PersistentList<FinancialRecordUi>
+) : Serializable
