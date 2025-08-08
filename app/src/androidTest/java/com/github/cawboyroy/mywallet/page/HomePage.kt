@@ -1,9 +1,11 @@
 package com.github.cawboyroy.mywallet.page
 
 import androidx.annotation.DrawableRes
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
@@ -18,7 +20,13 @@ class HomePage(private val composeTestRule: ComposeTestRule) {
     private val leftButton = composeTestRule.onNodeWithTag("LeftButton")
 
     fun checkMonth(text: String) = month.assertTextEquals(text)
-    fun checkMonthTotal(text: String) = monthTotal.assertTextEquals(text)
+
+    @OptIn(ExperimentalTestApi::class)
+    fun checkMonthTotal(text: String) {
+        composeTestRule.waitUntilAtLeastOneExists(hasText(text), 50)
+        monthTotal.assertTextEquals(text)
+    }
+
     fun clickAdd() = addButton.performClick()
     fun checkDaySum(position: Int, sum: String, date: String) {
         composeTestRule.onNodeWithTag("DayUiSum at $position", useUnmergedTree = true)
