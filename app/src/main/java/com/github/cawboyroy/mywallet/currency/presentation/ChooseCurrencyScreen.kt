@@ -1,7 +1,6 @@
 package com.github.cawboyroy.mywallet.currency.presentation
 
 import androidx.compose.foundation.border
-import androidx.compose.ui.platform.testTag
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,10 +23,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -36,17 +37,37 @@ import androidx.navigation.NavController
 import com.github.cawboyroy.mywallet.R
 import com.github.cawboyroy.mywallet.add.presentation.SaveButton
 import com.github.cawboyroy.mywallet.add.presentation.Title
+import java.util.Currency
 import java.util.Locale
 
 @Composable
 fun ChooseCurrencyScreen(navController: NavController) {
     val viewModel = hiltViewModel<ChooseCurrencyViewModel>()
-    val scrollState = rememberScrollState()
-    var input by rememberSaveable { mutableStateOf("") }
-    val list = viewModel.state.collectAsStateWithLifecycle().value
+    val list: List<Pair<Currency, String>> =
+        viewModel.state.collectAsStateWithLifecycle().value
 
     val close = viewModel.close.collectAsStateWithLifecycle().value
     close.Show(navController)
+
+    val alreadyChosenCurrency = viewModel.chosenCurrency().collectAsStateWithLifecycle("").value
+
+    ChooseCurrencyScreenUi(
+        alreadyChosenCurrency, list,
+        viewModel::save,
+        viewModel::find
+    )
+}
+
+@Composable
+private fun ChooseCurrencyScreenUi(
+    alreadyChosenCurrency: String,
+    list: List<Pair<Currency, String>>,
+    save: (String) -> Unit,
+    find: (String) -> Unit
+) {
+    var input by rememberSaveable { mutableStateOf("") }
+
+    val scrollState = rememberScrollState()
 
     Scaffold { contentPadding ->
         Column(
@@ -56,11 +77,9 @@ fun ChooseCurrencyScreen(navController: NavController) {
                 .verticalScroll(scrollState)
         ) {
             SaveButton(enabled = input.trim().isNotEmpty()) {
-                viewModel.save(input)
+                save(input)
             }
             Title(R.string.currency)
-            val alreadyChosenCurrency: String =
-                viewModel.chosenCurrency().collectAsStateWithLifecycle("").value
             if (alreadyChosenCurrency.isNotEmpty())
                 Text(
                     text = alreadyChosenCurrency,
@@ -75,7 +94,7 @@ fun ChooseCurrencyScreen(navController: NavController) {
                 value = TextFieldValue(input, selection = TextRange(input.length)),
                 onValueChange = {
                     input = it.text
-                    viewModel.find(input.trim())
+                    find(input.trim())
                 },
                 modifier = Modifier
                     .testTag("ChooseCurrencyScreenChooseCurrencyInput")
@@ -110,4 +129,17 @@ fun ChooseCurrencyScreen(navController: NavController) {
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewChooseCurrencyScreenUi() {
+    ChooseCurrencyScreenUi(
+        "$", listOf(
+            Pair(Currency.getAvailableCurrencies().first(), "Russian Ruble")
+        ), {
+
+        }, {
+
+        })
 }

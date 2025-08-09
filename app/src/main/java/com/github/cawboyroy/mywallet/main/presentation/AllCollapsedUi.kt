@@ -1,6 +1,7 @@
 package com.github.cawboyroy.mywallet.main.presentation
 
 import androidx.annotation.StringRes
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -58,4 +59,22 @@ interface AllDayActions {
     fun expandAll()
 
     fun collapseAll()
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewCollapsed() {
+    AllCollapsedUi.Collapsed.Show(object : AllDayActions {
+        override fun expandAll() = Unit
+        override fun collapseAll() = Unit
+    })
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewExpanded() {
+    AllCollapsedUi.Expanded.Show(object : AllDayActions {
+        override fun expandAll() = Unit
+        override fun collapseAll() = Unit
+    })
 }
