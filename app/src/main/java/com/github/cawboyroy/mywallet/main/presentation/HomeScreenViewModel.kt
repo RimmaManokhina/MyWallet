@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.cawboyroy.mywallet.core.RunAsync
-import com.github.cawboyroy.mywallet.currency.data.ChosenCurrencyRepository
 import com.github.cawboyroy.mywallet.di.ProvideTime
 import com.github.cawboyroy.mywallet.main.domain.ListInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +19,6 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
-    chosenCurrencyRepository: ChosenCurrencyRepository,
     private val savedStateHandle: SavedStateHandle,
     runAsync: RunAsync,
     private val interactor: ListInteractor,
@@ -31,7 +29,6 @@ class HomeScreenViewModel @Inject constructor(
     private val screenStateMutableStateFlow =
         MutableStateFlow(
             HomeScreenState(
-                provideTime.now(),
                 true,
                 "",
                 "",
@@ -42,7 +39,7 @@ class HomeScreenViewModel @Inject constructor(
     val screenState: StateFlow<HomeScreenState>
         get() = screenStateMutableStateFlow
 
-    val homeScreenParams = savedStateHandle.getStateFlow(
+    private val homeScreenParams = savedStateHandle.getStateFlow(
         key = SCREEN_STATE,
         initialValue = HomeScreenParams(
             allCollapsed = false,
@@ -55,7 +52,7 @@ class HomeScreenViewModel @Inject constructor(
     init {
         runAsync.runFlow(
             scope = viewModelScope,
-            flow = homeScreenParams.combine(chosenCurrencyRepository.value()) { screenParams, currency ->
+            flow = homeScreenParams.combine(interactor.currency()) { screenParams, currency ->
                 Pair(screenParams, currency)
             }.flatMapLatest { (screenParams, currency) ->
                 interactor.list(screenParams).map { list ->

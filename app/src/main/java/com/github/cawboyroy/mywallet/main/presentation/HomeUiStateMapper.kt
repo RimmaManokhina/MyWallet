@@ -31,7 +31,6 @@ interface HomeUiStateMapper {
             val recordsUi = separatedList(currency, collapsedDays, list)
             val monthAndTotal = monthNameAndSum(homeScreenParams.time, recordsUi, currency)
             return HomeScreenState(
-                homeScreenParams.time,
                 homeScreenParams.isExpenses,
                 monthAndTotal.month,
                 monthAndTotal.total,
