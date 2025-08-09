@@ -11,7 +11,7 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class) //todo should it be singleton?
+@InstallIn(SingletonComponent::class)
 class ListModule {
 
     @Provides
