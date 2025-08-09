@@ -29,7 +29,6 @@ fun HomeScreen(navController: NavController) {
 }
 
 data class HomeScreenState(
-    val now: Long,
     val isExpenses: Boolean,
     val month: String,
     val total: String,

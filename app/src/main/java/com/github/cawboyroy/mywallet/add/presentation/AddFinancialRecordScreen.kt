@@ -29,9 +29,9 @@ fun AddFinancialRecordScreen(
     navController: NavController,
     viewModel: AddFinancialRecordViewModel = hiltViewModel(),
 ) {
+
     val close by viewModel.close.collectAsStateWithLifecycle()
     close.Show(navController)
-
     val currencyViewModel = hiltViewModel<ChooseCurrencyViewModel>()
     val currency = currencyViewModel.chosenCurrency().collectAsStateWithLifecycle("").value
 
@@ -51,7 +51,6 @@ fun AddFinancialRecordScreenUi(
     add: (String, String, String, String, Long, Boolean) -> Unit
 ) {
     val scrollState = rememberScrollState()
-
     Scaffold { contentPadding ->
         Column(
             modifier = Modifier
@@ -68,9 +67,11 @@ fun AddFinancialRecordScreenUi(
             var money by rememberSaveable { mutableStateOf(BigDecimal.ZERO.toString()) }
             MoneyField(currency, false, money) { money = it }
             var title by rememberSaveable { mutableStateOf("") }
-            TitleField(title) { title = it }
             var category by rememberSaveable { mutableStateOf("") }
-            CategoryField(category) { category = it }
+            val onCategoryChange: (String) -> Unit = { category = it }
+            val isExpenses: Boolean = selectedIndex == 0
+            TitleField(title, isExpenses, onCategoryChange) { title = it }
+            CategoryField(category, isExpenses, onCategoryChange)
             var time by rememberSaveable { mutableLongStateOf(now) }
             ChooseTime(time) { time = it }
             var description by rememberSaveable { mutableStateOf("") }
